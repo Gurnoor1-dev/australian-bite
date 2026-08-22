@@ -16,6 +16,7 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as MenuRouteImport } from './routes/menu'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
+import { Route as AuthenticatedStaffRouteImport } from './routes/_authenticated/staff'
 import { Route as AuthenticatedWishlistRouteImport } from './routes/_authenticated/wishlist'
 import { Route as AuthenticatedOrdersIndexRouteImport } from './routes/_authenticated/orders.index'
 import { Route as AuthenticatedOrdersIdRouteImport } from './routes/_authenticated/orders.$id'
@@ -54,6 +55,11 @@ const AuthenticatedCheckoutRoute = AuthenticatedCheckoutRouteImport.update({
   path: '/checkout',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedStaffRoute = AuthenticatedStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedWishlistRoute = AuthenticatedWishlistRouteImport.update({
   id: '/wishlist',
   path: '/wishlist',
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/menu': typeof MenuRoute
   '/support': typeof SupportRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
+  '/staff': typeof AuthenticatedStaffRoute
   '/wishlist': typeof AuthenticatedWishlistRoute
   '/orders/$id': typeof AuthenticatedOrdersIdRoute
   '/orders/': typeof AuthenticatedOrdersIndexRoute
@@ -89,6 +96,7 @@ export interface FileRoutesByTo {
   '/menu': typeof MenuRoute
   '/support': typeof SupportRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
+  '/staff': typeof AuthenticatedStaffRoute
   '/wishlist': typeof AuthenticatedWishlistRoute
   '/orders/$id': typeof AuthenticatedOrdersIdRoute
   '/orders': typeof AuthenticatedOrdersIndexRoute
@@ -102,6 +110,7 @@ export interface FileRoutesById {
   '/menu': typeof MenuRoute
   '/support': typeof SupportRoute
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
+  '/_authenticated/staff': typeof AuthenticatedStaffRoute
   '/_authenticated/wishlist': typeof AuthenticatedWishlistRoute
   '/_authenticated/orders/$id': typeof AuthenticatedOrdersIdRoute
   '/_authenticated/orders/': typeof AuthenticatedOrdersIndexRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/menu'
     | '/support'
     | '/checkout'
+    | '/staff'
     | '/wishlist'
     | '/orders/$id'
     | '/orders/'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/menu'
     | '/support'
     | '/checkout'
+    | '/staff'
     | '/wishlist'
     | '/orders/$id'
     | '/orders'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/menu'
     | '/support'
     | '/_authenticated/checkout'
+    | '/_authenticated/staff'
     | '/_authenticated/wishlist'
     | '/_authenticated/orders/$id'
     | '/_authenticated/orders/'
@@ -203,6 +215,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCheckoutRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/staff': {
+      id: '/_authenticated/staff'
+      path: '/staff'
+      fullPath: '/staff'
+      preLoaderRoute: typeof AuthenticatedStaffRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/wishlist': {
       id: '/_authenticated/wishlist'
       path: '/wishlist'
@@ -229,6 +248,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCheckoutRoute: typeof AuthenticatedCheckoutRoute
+  AuthenticatedStaffRoute: typeof AuthenticatedStaffRoute
   AuthenticatedWishlistRoute: typeof AuthenticatedWishlistRoute
   AuthenticatedOrdersIdRoute: typeof AuthenticatedOrdersIdRoute
   AuthenticatedOrdersIndexRoute: typeof AuthenticatedOrdersIndexRoute
@@ -236,6 +256,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCheckoutRoute: AuthenticatedCheckoutRoute,
+  AuthenticatedStaffRoute: AuthenticatedStaffRoute,
   AuthenticatedWishlistRoute: AuthenticatedWishlistRoute,
   AuthenticatedOrdersIdRoute: AuthenticatedOrdersIdRoute,
   AuthenticatedOrdersIndexRoute: AuthenticatedOrdersIndexRoute,
