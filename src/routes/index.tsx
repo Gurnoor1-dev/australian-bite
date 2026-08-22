@@ -42,17 +42,17 @@ function Home() {
 
   return (
     <main>
-      <section className="bg-hero">
+      <section className="bg-hero text-charcoal-foreground">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-16 sm:py-24 lg:grid-cols-2 lg:items-center">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1 text-xs font-bold uppercase tracking-widest">
+            <span className="inline-flex items-center gap-2 rounded-full bg-background/90 px-3 py-1 text-foreground text-xs font-bold uppercase tracking-widest">
               <Flame className="size-3.5 text-primary" /> Cooked to order
             </span>
             <h1 className="text-display mt-4 text-5xl leading-[0.95] sm:text-7xl">
               Big Aussie flavour,
               <br /> served fast.
             </h1>
-            <p className="mt-5 max-w-lg text-lg text-muted-foreground">
+            <p className="mt-5 max-w-lg text-lg text-charcoal-foreground/75">
               Flame-grilled burgers, bushfire wings and loaded chips. Order for pickup or delivery,
               schedule it for later, and watch your order move from the grill to your door.
             </p>
