@@ -56,8 +56,8 @@ function StaffPage() {
   });
 
   const setStatus = async (orderId: string, status: string, note?: string) => {
-    const patch: Record<string, unknown> = { status };
-    if (status === "declined") patch["decline_reason"] = note || null;
+    const patch: { status: string; decline_reason?: string | null } = { status };
+    if (status === "declined") patch.decline_reason = note || null;
     const { error } = await supabase.from("orders").update(patch).eq("id", orderId);
     if (error) {
       toast.error(error.message);
