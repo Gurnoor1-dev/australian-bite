@@ -1,5 +1,5 @@
 export const currency = (value: number) =>
-  new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD" }).format(value);
+  new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(value);
 
 export const ORDER_STATUS_LABELS: Record<string, string> = {
   pending: "Awaiting confirmation",
@@ -13,8 +13,22 @@ export const ORDER_STATUS_LABELS: Record<string, string> = {
   call_requested: "Restaurant will call you",
 };
 
-export const SUPPORT_PHONE = "+61 2 8123 4400";
-export const SUPPORT_PHONE_TEL = "+61281234400";
+export const PAYMENT_METHODS = [
+  { value: "upi", label: "UPI (GPay / PhonePe / Paytm)" },
+  { value: "card", label: "Credit / Debit card" },
+  { value: "netbanking", label: "Net banking" },
+  { value: "cod", label: "Cash on delivery" },
+] as const;
+
+export const PAYMENT_LABELS: Record<string, string> = Object.fromEntries(
+  PAYMENT_METHODS.map((m) => [m.value, m.label]),
+);
+
+export const DELIVERY_FEE = 49;
+export const UPI_ID = "aubite@upi";
+export const SUPPORT_PHONE = "+91 80 4718 2200";
+export const SUPPORT_PHONE_TEL = "+918047182200";
+export const STORE_ADDRESS = "AU Bite, 24 MG Road, Bengaluru, Karnataka 560001";
 
 export function statusTone(status: string) {
   if (status === "declined" || status === "cancelled") return "destructive";
@@ -25,10 +39,33 @@ export function statusTone(status: string) {
 
 export function formatDateTime(value?: string | null) {
   if (!value) return "—";
-  return new Date(value).toLocaleString("en-AU", {
+  return new Date(value).toLocaleString("en-IN", {
     day: "2-digit",
     month: "short",
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+export type Offer = {
+  id: string;
+  code: string;
+  title: string;
+  description: string | null;
+  discount_type: "percent" | "flat";
+  discount_value: number;
+  min_order: number;
+  max_discount: number | null;
+  valid_until: string | null;
+  is_active: boolean;
+};
+
+export function offerDiscount(offer: Offer, subtotal: number) {
+  if (subtotal < Number(offer.min_order)) return 0;
+  const raw =
+    offer.discount_type === "flat"
+      ? Number(offer.discount_value)
+      : (subtotal * Number(offer.discount_value)) / 100;
+  const capped = offer.max_discount ? Math.min(raw, Number(offer.max_discount)) : raw;
+  return Math.min(Math.round(capped), subtotal);
 }
