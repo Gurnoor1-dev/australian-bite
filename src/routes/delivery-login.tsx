@@ -1,0 +1,18 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import logo from "@/assets/australian-bite-logo.png.asset.json";
+
+export const Route = createFileRoute("/delivery-login")({ head: () => ({ meta: [{ title: "Delivery partner login — Australian Bite" }] }), component: DeliveryLogin });
+
+function DeliveryLogin() {
+  const navigate = useNavigate();
+  const [email,setEmail]=useState(""); const [password,setPassword]=useState(""); const [busy,setBusy]=useState(false);
+  useEffect(()=>{ supabase.auth.getSession().then(async({data})=>{ if(!data.session)return; const {data:role}=await supabase.from("user_roles").select("role").eq("user_id",data.session.user.id).eq("role","delivery_partner").maybeSingle(); if(role)navigate({to:"/delivery-dashboard"}); }); },[navigate]);
+  const submit=async(e:React.FormEvent)=>{e.preventDefault();setBusy(true);try{const {data,error}=await supabase.auth.signInWithPassword({email,password});if(error)throw error;if(!data.user)throw new Error("Could not start your session.");const {data:role,error:roleError}=await supabase.from("user_roles").select("role").eq("user_id",data.user.id).eq("role","delivery_partner").maybeSingle();if(roleError)throw roleError;if(!role){await supabase.auth.signOut();throw new Error("This account is not registered as a delivery partner.");}toast.success("Welcome to partner control.");navigate({to:"/delivery-dashboard"});}catch(err){toast.error(err instanceof Error?err.message:"Unable to sign in");}finally{setBusy(false);}};
+  return <main className="min-h-[85vh] px-4 py-10 sm:py-16"><div className="mx-auto grid max-w-5xl overflow-hidden rounded-[2rem] border border-border bg-card shadow-2xl lg:grid-cols-[1.1fr_.9fr]"><section className="relative hidden overflow-hidden bg-primary p-10 text-primary-foreground lg:flex lg:flex-col lg:justify-between"><div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-2xl"/><div><img src={logo.url} alt="Australian Bite" className="h-16 w-auto brightness-0 invert"/><p className="mt-12 max-w-md text-4xl font-black tracking-tight">Move great food. Make someone&apos;s night.</p></div><p className="text-sm text-primary-foreground/70">Live deliveries · smart routing · customer visibility</p></section><section className="p-7 sm:p-10"><Link to="/" className="text-sm font-bold text-primary">← Australian Bite</Link><h1 className="mt-8 text-3xl font-black">Delivery partner</h1><p className="mt-2 text-muted-foreground">Sign in to see your runs, share live location and close deliveries.</p><form className="mt-8 space-y-4" onSubmit={submit}><div><Label htmlFor="delivery-email">Email</Label><Input id="delivery-email" type="email" value={email} onChange={e=>setEmail(e.target.value)} required/></div><div><Label htmlFor="delivery-password">Password</Label><Input id="delivery-password" type="password" value={password} onChange={e=>setPassword(e.target.value)} required minLength={6}/></div><Button className="h-12 w-full rounded-xl text-base font-bold" disabled={busy}>{busy?"Checking account…":"Enter partner dashboard"}</Button></form><div className="mt-8 rounded-2xl bg-secondary p-4 text-sm text-muted-foreground"><strong className="text-foreground">Location privacy:</strong> live location is shared only after you enable it for an active delivery.</div></section></div></main>;
+}
