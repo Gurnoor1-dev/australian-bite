@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Heart, LogOut, Menu, Phone, ShoppingBag, UserRound, X } from "lucide-react";
 import { useState } from "react";
-import logo from "@/assets/australian-bite-logo.png.asset.json";
+import logo from "@/assets/australian-bite-logo.png";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
