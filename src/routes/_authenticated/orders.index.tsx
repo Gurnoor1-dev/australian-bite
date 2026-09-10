@@ -1,75 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { ArrowRight, Clock3, PackageCheck, ShoppingBag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { currency, formatDateTime, ORDER_STATUS_LABELS } from "@/lib/format";
 import { Button } from "@/components/ui/button";
-
-export const Route = createFileRoute("/_authenticated/orders/")({
-  head: () => ({
-    meta: [
-      { title: "My orders — Australian Bite" },
-      { name: "description", content: "Track current Australian Bite orders and revisit your order history with full status updates." },
-      { property: "og:title", content: "My orders — Australian Bite" },
-      { property: "og:description", content: "Track current orders and revisit your history." },
-    ],
-  }),
-  component: OrdersPage,
-});
-
-function OrdersPage() {
-  const { user } = useAuth();
-  const { data, isLoading } = useQuery({
-    queryKey: ["orders", user?.id],
-    enabled: !!user,
-    refetchInterval: 15000,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("orders")
-        .select("*")
-        .eq("user_id", user!.id)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  return (
-    <main className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="text-display text-4xl">My orders</h1>
-      {isLoading ? (
-        <p className="mt-8 text-muted-foreground">Loading your orders…</p>
-      ) : (data ?? []).length === 0 ? (
-        <div className="mt-8 rounded-3xl border border-border bg-card p-8 text-center shadow-card">
-          <p className="text-muted-foreground">No orders yet.</p>
-          <Link to="/menu" className="mt-4 inline-block">
-            <Button>Start an order</Button>
-          </Link>
-        </div>
-      ) : (
-        <ul className="mt-8 space-y-3">
-          {(data ?? []).map((order) => (
-            <li key={order.id}>
-              <Link
-                to="/orders/$id"
-                params={{ id: order.id }}
-                className="flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-card p-5 shadow-card transition-colors hover:border-primary"
-              >
-                <div className="flex-1">
-                  <p className="font-bold">{order.order_number}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {formatDateTime(order.created_at)} · {order.order_type}
-                  </p>
-                </div>
-                <span className="rounded-full bg-secondary px-3 py-1 text-xs font-bold uppercase tracking-wide">
-                  {ORDER_STATUS_LABELS[order.status] ?? order.status}
-                </span>
-                <span className="font-bold">{currency(Number(order.total))}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </main>
-  );
-}
+export const Route=createFileRoute("/_authenticated/orders/")({head:()=>({meta:[{title:"My orders — Australian Bite"},{name:"description",content:"Track current Australian Bite orders and revisit your order history."}]}),component:OrdersPage});
+function OrdersPage(){const {user}=useAuth();const {data,isLoading}=useQuery({queryKey:["orders",user?.id],enabled:!!user,refetchInterval:15000,queryFn:async()=>{const {data,error}=await supabase.from("orders").select("*").eq("user_id",user!.id).order("created_at",{ascending:false});if(error)throw error;return data;}});const orders=data??[];const active=orders.filter(o=>!["completed","cancelled","declined"].includes(o.status));return <main className="site-shell min-h-screen"><div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8"><div className="flex items-end justify-between gap-4"><div><span className="section-kicker"><ShoppingBag className="size-3"/> Order history</span><h1 className="text-display mt-3 text-5xl sm:text-6xl">My orders</h1><p className="mt-2 text-muted-foreground">Every order, every update, all in one place.</p></div><Link to="/menu" className="hidden sm:block"><Button variant="outline" className="rounded-xl">Order again <ArrowRight className="ml-2 size-4"/></Button></Link></div>{isLoading?<div className="mt-10 grid gap-4">{[1,2,3].map(i=><div key={i} className="h-28 animate-pulse rounded-[26px] bg-muted"/>)}</div>:!orders.length?<div className="mt-10 rounded-[30px] border border-border bg-card p-12 text-center shadow-card"><div className="mx-auto grid size-16 place-items-center rounded-2xl bg-secondary"><ShoppingBag className="size-7 text-primary"/></div><h2 className="mt-5 text-2xl font-black">No orders yet.</h2><p className="mt-2 text-sm text-muted-foreground">Your first proper Aussie feast is only a few taps away.</p><Link to="/menu" className="mt-6 inline-block"><Button size="lg" className="rounded-xl">Start an order <ArrowRight className="ml-2 size-4"/></Button></Link></div>:<><div className="mt-10 grid gap-4 sm:grid-cols-3"><Stat icon={<PackageCheck/>} label="Total orders" value={orders.length}/><Stat icon={<Clock3/>} label="In progress" value={active.length}/><Stat icon={<ShoppingBag/>} label="Latest total" value={currency(Number(orders[0]?.total??0))}/></div>{active.length>0&&<section className="mt-8"><p className="mb-3 text-xs font-black uppercase tracking-[.18em] text-primary">Live now</p><div className="grid gap-3">{active.map(o=><OrderCard key={o.id} order={o} active/>)}</div></section>}<section className="mt-9"><p className="mb-3 text-xs font-black uppercase tracking-[.18em] text-muted-foreground">History</p><div className="space-y-3">{orders.filter(o=>!active.includes(o)).map(o=><OrderCard key={o.id} order={o}/>)}</div></section></>}</div></main>}
+function Stat({icon,label,value}:{icon:React.ReactNode;label:string;value:React.ReactNode}){return <div className="rounded-[24px] border border-border bg-card p-5 shadow-card"><div className="flex items-center gap-3"><div className="grid size-10 place-items-center rounded-xl bg-secondary text-primary [&>svg]:size-5">{icon}</div><div><p className="text-xs font-black uppercase tracking-wider text-muted-foreground">{label}</p><p className="mt-1 text-xl font-black">{value}</p></div></div></div>}
+function OrderCard({order,active}:{order:any;active?:boolean}){return <Link to="/orders/$id" params={{id:order.id}} className={`block rounded-[26px] border bg-card p-5 shadow-card transition hover:-translate-y-0.5 hover:border-primary/40 ${active?"border-primary/40":"border-border"}`}><div className="flex flex-wrap items-center gap-3"><div className="grid size-11 place-items-center rounded-xl bg-ember text-primary-foreground"><span className="text-display text-xl">#</span></div><div className="min-w-[150px] flex-1"><p className="font-black">{order.order_number}</p><p className="text-sm text-muted-foreground">{formatDateTime(order.created_at)} · {order.order_type}</p></div><span className="rounded-full bg-secondary px-3 py-1 text-xs font-black uppercase tracking-wide">{ORDER_STATUS_LABELS[order.status]??order.status}</span><span className="font-black">{currency(Number(order.total))}</span><ArrowRight className="size-4 text-muted-foreground"/></div></Link>}
