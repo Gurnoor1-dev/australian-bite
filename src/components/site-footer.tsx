@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, Phone, Clock } from "lucide-react";
-import logo from "@/assets/australian-bite-logo.png.asset.json";
+import logo from "@/assets/australian-bite-logo.png";
 import { SUPPORT_PHONE, SUPPORT_PHONE_TEL } from "@/lib/format";
 
 export function SiteFooter() {
