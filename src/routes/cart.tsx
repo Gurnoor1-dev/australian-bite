@@ -1,71 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { ArrowRight, Minus, Plus, ShoppingBag, Trash2, Truck, ShieldCheck } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { currency } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/cart")({
-  head: () => ({
-    meta: [
-      { title: "Your bag — Australian Bite" },
-      { name: "description", content: "Review your Australian Bite order before checkout, adjust quantities and head to payment." },
-      { property: "og:title", content: "Your bag — Australian Bite" },
-      { property: "og:description", content: "Review your order before checkout." },
-    ],
-  }),
-  component: CartPage,
-});
+export const Route = createFileRoute("/cart")({ head: () => ({ meta: [{ title: "Your bag — Australian Bite" }, { name: "description", content: "Review your Australian Bite order before checkout." }] }), component: CartPage });
 
 function CartPage() {
   const { lines, setQuantity, remove, subtotal } = useCart();
-
-  return (
-    <main className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="text-display text-4xl">Your bag</h1>
-      {lines.length === 0 ? (
-        <div className="mt-8 rounded-3xl border border-border bg-card p-8 text-center shadow-card">
-          <p className="text-muted-foreground">Your bag is empty.</p>
-          <Link to="/menu" className="mt-4 inline-block">
-            <Button>Browse the menu</Button>
-          </Link>
-        </div>
-      ) : (
-        <>
-          <ul className="mt-8 space-y-3">
-            {lines.map((line) => (
-              <li
-                key={line.id}
-                className="flex items-center gap-3 rounded-2xl border border-border bg-card p-4 shadow-card"
-              >
-                <div className="flex-1">
-                  <p className="font-bold">{line.name}</p>
-                  <p className="text-sm text-muted-foreground">{currency(line.price)} each</p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Button size="icon" variant="outline" aria-label="Decrease" onClick={() => setQuantity(line.id, line.quantity - 1)}>
-                    <Minus className="size-4" />
-                  </Button>
-                  <span className="w-8 text-center font-bold">{line.quantity}</span>
-                  <Button size="icon" variant="outline" aria-label="Increase" onClick={() => setQuantity(line.id, line.quantity + 1)}>
-                    <Plus className="size-4" />
-                  </Button>
-                </div>
-                <span className="w-20 text-right font-bold">{currency(line.price * line.quantity)}</span>
-                <Button size="icon" variant="ghost" aria-label="Remove" onClick={() => remove(line.id)}>
-                  <Trash2 className="size-4" />
-                </Button>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-6 flex items-center justify-between rounded-2xl border border-border bg-card p-5 shadow-card">
-            <span className="text-lg font-bold">Subtotal</span>
-            <span className="text-2xl font-bold">{currency(subtotal)}</span>
-          </div>
-          <Link to="/checkout" className="mt-5 block">
-            <Button size="lg" className="w-full">Checkout</Button>
-          </Link>
-        </>
-      )}
-    </main>
-  );
+  return <main className="site-shell min-h-screen">
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+      <div className="flex items-end justify-between gap-4"><div><span className="section-kicker"><ShoppingBag className="size-3" /> Your order</span><h1 className="text-display mt-3 text-5xl sm:text-6xl">Your bag</h1><p className="mt-2 text-muted-foreground">{lines.length ? `${lines.length} item${lines.length === 1 ? "" : "s"} ready to go.` : "Nothing here yet."}</p></div><Link to="/menu" className="hidden text-sm font-black text-primary sm:block">Keep browsing →</Link></div>
+      {lines.length === 0 ? <div className="mt-10 rounded-[30px] border border-border bg-card p-10 text-center shadow-card"><div className="mx-auto grid size-16 place-items-center rounded-2xl bg-secondary"><ShoppingBag className="size-7 text-primary" /></div><h2 className="mt-5 text-2xl">Your bag is waiting.</h2><p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-muted-foreground">Grab a burger, load up some sides and we'll handle the rest.</p><Link to="/menu" className="mt-6 inline-block"><Button size="lg" className="rounded-xl px-6">Browse the menu <ArrowRight className="ml-2 size-4" /></Button></Link></div> : <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
+        <section className="space-y-3">{lines.map((line) => <div key={line.id} className="group flex flex-wrap items-center gap-4 rounded-[24px] border border-border bg-card p-4 shadow-card transition hover:border-primary/30 sm:p-5"><div className="grid size-16 shrink-0 place-items-center rounded-2xl bg-ember text-primary-foreground"><span className="text-display text-2xl">{line.quantity}</span></div><div className="min-w-[150px] flex-1"><p className="font-black">{line.name}</p><p className="mt-1 text-sm text-muted-foreground">{currency(line.price)} each</p></div><div className="flex items-center rounded-xl border border-border bg-background p-1"><Button size="icon" variant="ghost" className="size-8 rounded-lg" aria-label="Decrease" onClick={() => setQuantity(line.id, line.quantity - 1)}><Minus className="size-3.5" /></Button><span className="w-8 text-center text-sm font-black">{line.quantity}</span><Button size="icon" variant="ghost" className="size-8 rounded-lg" aria-label="Increase" onClick={() => setQuantity(line.id, line.quantity + 1)}><Plus className="size-3.5" /></Button></div><span className="w-20 text-right font-black">{currency(line.price * line.quantity)}</span><Button size="icon" variant="ghost" className="rounded-xl text-muted-foreground hover:text-destructive" aria-label="Remove" onClick={() => remove(line.id)}><Trash2 className="size-4" /></Button></div>)}</section>
+        <aside className="rounded-[28px] border border-border bg-card p-6 shadow-float lg:sticky lg:top-24"><p className="text-xs font-black uppercase tracking-[.16em] text-primary">Order summary</p><div className="mt-6 flex items-center justify-between text-sm text-muted-foreground"><span>Subtotal</span><span>{currency(subtotal)}</span></div><div className="mt-3 flex items-center justify-between text-sm text-muted-foreground"><span>Delivery</span><span>Calculated at checkout</span></div><div className="mt-5 flex items-end justify-between border-t border-border pt-5"><span className="text-lg font-black">Total</span><span className="text-3xl font-black">{currency(subtotal)}</span></div><Link to="/checkout" className="mt-6 block"><Button size="lg" className="h-12 w-full rounded-xl font-black">Continue to checkout <ArrowRight className="ml-2 size-4" /></Button></Link><div className="mt-6 space-y-3 border-t border-border pt-5 text-xs font-bold text-muted-foreground"><p className="flex items-center gap-2"><Truck className="size-4 text-primary" /> Pickup or delivery available</p><p className="flex items-center gap-2"><ShieldCheck className="size-4 text-primary" /> Secure order flow</p></div></aside>
+      </div>}
+    </div>
+  </main>;
 }
