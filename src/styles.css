@@ -303,3 +303,20 @@
   .bite-marquee div { animation:none; }
   .bite-feature-card img { transition:none; }
 }
+
+.bite-header { background:rgb(245 243 233 / 94%);border-bottom:1px solid #dedfd1;backdrop-filter:blur(18px);color:#171a15; }
+.bite-brand { display:flex;align-items:center;gap:.65rem;flex-shrink:0; }
+.bite-brand-mark { display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#171a15;color:#c9f36b;font-family:"Barlow Condensed",sans-serif;font-size:1.1rem;font-weight:900;letter-spacing:-.06em; }
+.bite-brand-mark span { position:absolute;margin: -25px 0 0 30px;color:#f28a65;font-size:.9rem; }
+.bite-brand-name { font-family:"Barlow Condensed",sans-serif;font-size:1.13rem;font-weight:900;line-height:.82;letter-spacing:.02em; }
+.bite-brand-dot { color:#8cae42; }
+.bite-nav-link { border-radius:999px;padding:.7rem .9rem;font-size:.77rem;font-weight:800;color:#686b62;transition:background .2s,color .2s; }
+.bite-nav-link:hover,.bite-nav-active { background:#e8eadb;color:#171a15; }
+.bite-cart-link { display:inline-flex;align-items:center;gap:.55rem;border-radius:999px;background:#171a15;color:#f5f3e9;padding:.75rem 1rem;font-size:.75rem;font-weight:800;transition:background .2s,transform .2s; }
+.bite-cart-link:hover { background:#30372a;transform:translateY(-1px); }
+.bite-signin { align-items:center;gap:.4rem;padding:.65rem .7rem;font-size:.75rem;font-weight:800; }
+.bite-signin:hover { color:#687d37; }
+.bite-icon-link { place-items:center;width:40px;height:40px;border-radius:50%;transition:background .2s; }
+.bite-icon-link:hover { background:#e8eadb; }
+.bite-mobile-menu { border-top:1px solid #dedfd1;background:#f5f3e9; }
+.bite-mobile-menu a:hover { background:#e8eadb; }
