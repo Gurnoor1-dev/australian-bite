@@ -431,3 +431,11 @@
  *,*::before,*::after { scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important; }
  .bite-header,.bite-brand,.bite-nav-link,.bite-nav-link::after,.bite-cart-link,.bite-icon-link,.bite-signin,.bite-menu-toggle,.bite-mobile-panel,.bite-mobile-link,.bite-mobile-link svg,.bite-product-card,.bite-product-photo img,.bite-product-save,.bite-product-add,.bite-trust-item { transform:none!important; }
 }
+
+.bite-order-progress { display:flex;align-items:center;gap:.7rem;overflow-x:auto;padding:.9rem 1rem;border:1px solid #e3e4d9;border-radius:16px;background:rgb(255 253 245 / 75%);color:#77796e;font-size:.72rem;font-weight:800;white-space:nowrap; }
+.bite-order-progress>span:not(.bite-progress-line) { display:inline-flex;align-items:center;gap:.45rem; }
+.bite-order-progress b { display:grid;width:27px;height:27px;place-items:center;border-radius:50%;background:#e9e9df;color:#77796e;font-size:.65rem; }
+.bite-order-progress .is-current { color:#22291d; }
+.bite-order-progress .is-current b { background:#c9f36b;color:#171a15; }
+.bite-progress-line { width:clamp(12px,5vw,60px);height:1px;flex:0 0 auto;background:#d8dacd; }
+@media (max-width:520px) { .bite-order-progress { gap:.45rem;padding:.75rem;font-size:.65rem; } .bite-order-progress b { width:24px;height:24px; } .bite-progress-line { width:12px; } }
