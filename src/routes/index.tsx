@@ -29,7 +29,7 @@ function Home() {
   const { data: store } = useStoreSettings();
   const openingHours = store?.opening_hours || STORE_HOURS;
   const { data } = useQuery({ queryKey: ["featured-items"], queryFn: async () => {
-    const { data, error } = await menuSupabase.from("menu_items").select("id,name,variant,price,item_type,is_available,is_vegetarian,is_spicy,calories,category_id,description,image_url").eq("is_available", true).order("sort_order").limit(3);
+    const { data, error } = await menuSupabase.from("menu_items").select("id,name,variant,price,item_type,is_available,is_vegetarian,is_spicy,calories,category_id,description").eq("is_available", true).order("sort_order").limit(3);
     if (error) throw error;
     return data as unknown as MenuItem[];
   }});
