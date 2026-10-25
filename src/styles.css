@@ -354,3 +354,32 @@
 }
 
 .dash-tab{display:inline-flex;align-items:center;gap:.5rem;border:1px solid #dfe1d5;border-radius:999px;background:#fffdf5;padding:.7rem 1rem;font-size:.78rem;font-weight:900;color:#5b5f52;transition:all .18s}.dash-tab.active,.dash-tab:hover{border-color:#171a15;background:#171a15;color:#c9f36b}
+
+/* Motion system: compositor-friendly transforms and opacity for a consistently fluid header. */
+.bite-header { position:sticky; isolation:isolate; transition:background-color 420ms cubic-bezier(.22,1,.36,1),border-color 420ms cubic-bezier(.22,1,.36,1),box-shadow 420ms cubic-bezier(.22,1,.36,1); }
+.bite-header-inner { position:relative; }
+.bite-brand { transform-origin:left center; transition:transform 520ms cubic-bezier(.16,1,.3,1),opacity 260ms ease; }
+.bite-brand:hover { transform:translate3d(0,-1px,0) scale(1.015); }
+.bite-brand-logo { display:block;width:auto;height:52px;max-width:190px;object-fit:contain; }
+.bite-main-nav { perspective:900px; }
+.bite-nav-link { position:relative;isolation:isolate;overflow:hidden;transition:color 360ms cubic-bezier(.16,1,.3,1),background-color 360ms cubic-bezier(.16,1,.3,1),transform 420ms cubic-bezier(.16,1,.3,1);will-change:transform; }
+.bite-nav-link::after { content:"";position:absolute;z-index:-1;left:18%;right:18%;bottom:5px;height:2px;border-radius:99px;background:#8caf42;transform:scaleX(0);transform-origin:center;transition:transform 420ms cubic-bezier(.16,1,.3,1); }
+.bite-nav-link:hover { transform:translate3d(0,-2px,0); }
+.bite-nav-link:hover::after,.bite-nav-active::after { transform:scaleX(1); }
+.bite-nav-active { box-shadow:inset 0 0 0 1px rgb(140 175 66 / 12%); }
+.bite-cart-link,.bite-icon-link,.bite-signin,.bite-menu-toggle { transition:transform 420ms cubic-bezier(.16,1,.3,1),background-color 360ms cubic-bezier(.16,1,.3,1),color 360ms cubic-bezier(.16,1,.3,1),box-shadow 420ms cubic-bezier(.16,1,.3,1); }
+.bite-cart-link:hover,.bite-icon-link:hover,.bite-signin:hover { transform:translate3d(0,-2px,0); }
+.bite-cart-link:active,.bite-icon-link:active,.bite-menu-toggle:active { transform:scale(.96); }
+.bite-mobile-panel { display:grid;grid-template-rows:0fr;opacity:0;transform:translate3d(0,-8px,0);pointer-events:none;border-top:1px solid transparent;background:rgb(245 243 233 / 97%);transition:grid-template-rows 480ms cubic-bezier(.16,1,.3,1),opacity 320ms ease,transform 480ms cubic-bezier(.16,1,.3,1),border-color 320ms ease; }
+.bite-mobile-panel > div { min-height:0;overflow:hidden; }
+.bite-mobile-panel.is-open { grid-template-rows:1fr;opacity:1;transform:translate3d(0,0,0);pointer-events:auto;border-color:#dedfd1; }
+.bite-mobile-link { display:flex;align-items:center;justify-content:space-between;border-radius:14px;padding:.85rem 1rem;font-size:.9rem;font-weight:800;color:#30352a;opacity:0;transform:translate3d(0,8px,0);transition:opacity 300ms ease,transform 420ms cubic-bezier(.16,1,.3,1),background-color 280ms ease,color 280ms ease; }
+.bite-mobile-panel.is-open .bite-mobile-link { opacity:1;transform:translate3d(0,0,0);transition-delay:calc(var(--nav-index,0) * 35ms); }
+.bite-mobile-link:hover { background:#e8eadb;color:#171a15; }
+.bite-mobile-link svg { transition:transform 360ms cubic-bezier(.16,1,.3,1); }
+.bite-mobile-link:hover svg { transform:translate3d(3px,0,0); }
+.bite-mobile-signin { background:#c9f36b;color:#171a15; }
+@media (max-width:767px) { .bite-brand-logo { height:46px;max-width:160px; } }
+@media (prefers-reduced-motion:reduce) {
+ .bite-header,.bite-brand,.bite-nav-link,.bite-nav-link::after,.bite-cart-link,.bite-icon-link,.bite-signin,.bite-menu-toggle,.bite-mobile-panel,.bite-mobile-link,.bite-mobile-link svg { transition:none!important;animation:none!important;transform:none!important; }
+}
