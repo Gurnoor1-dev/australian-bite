@@ -14,10 +14,10 @@ const wingsImage = "https://images.unsplash.com/photo-1572490122747-3968b75cc699
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
-    { title: "Australian Bite — Made for the hungry" },
-    { name: "description", content: "Big flavour, no fuss. Discover Australian Bite's burgers, crispy sides and kitchen-made favourites. Order pickup or delivery." },
+    { title: "Australian Bite | Pizzas, Curries & More in Pehowa" },
+    { name: "description", content: "Discover Australian Bite in Pehowa, Haryana: pizzas, Indian curries, biryani, shakes, wraps and sides. Explore our menu and call to order." },
     { property: "og:title", content: "Australian Bite — Made for the hungry" },
-    { property: "og:description", content: "Big flavour. Good mood. Your next favourite bite." },
+    { property: "og:description", content: "Pizzas, curries, biryani and more. Good food in Pehowa, Haryana." },
     { property: "og:type", content: "website" },
   ] }),
   component: Home,
