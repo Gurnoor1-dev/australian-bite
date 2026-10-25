@@ -5,6 +5,8 @@ export type CartLine = {
   name: string;
   price: number;
   quantity: number;
+  menuItemId?: string;
+  addons?: { id: string; name: string; price: number }[];
 };
 
 type CartContextValue = {
