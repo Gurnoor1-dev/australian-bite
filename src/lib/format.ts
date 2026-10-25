@@ -6,6 +6,8 @@ export const ORDER_STATUS_LABELS: Record<string, string> = {
   accepted: "Accepted",
   preparing: "In the kitchen",
   ready: "Ready for pickup",
+  ready_for_pickup: "Ready for pickup",
+  delivery_requested: "Finding a delivery partner",
   out_for_delivery: "Out for delivery",
   completed: "Completed",
   declined: "Declined",
