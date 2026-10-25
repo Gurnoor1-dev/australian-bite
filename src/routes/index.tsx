@@ -6,6 +6,7 @@ import { MenuItemCard, type MenuItem } from "@/components/menu-item-card";
 import { Reveal } from "@/components/reveal";
 import { Button } from "@/components/ui/button";
 import { currency, type Offer, STORE_HOURS } from "@/lib/format";
+import { useStoreSettings } from "@/hooks/useStoreSettings";
 import { db } from "@/lib/db";
 
 const foodImage = "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1200&q=85";
@@ -24,6 +25,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { data: store } = useStoreSettings();
+  const openingHours = store?.opening_hours || STORE_HOURS;
   const { data } = useQuery({ queryKey: ["featured-items"], queryFn: async () => {
     const { data, error } = await menuSupabase.from("menu_items").select("id,name,variant,price,item_type,is_available,is_vegetarian,is_spicy,calories,category_id,description").eq("is_available", true).order("sort_order").limit(3);
     if (error) throw error;
@@ -84,6 +87,6 @@ function Home() {
       <div className="bite-steps"><div className="bite-step"><span>01</span><div><h3>Pick your favourites</h3><p>Explore the menu and make it yours.</p></div><Plus className="size-5" /></div><div className="bite-step"><span>02</span><div><h3>Choose your timing</h3><p>Pickup, delivery or schedule it ahead.</p></div><Clock3 className="size-5" /></div><div className="bite-step"><span>03</span><div><h3>Good things are coming</h3><p>Track your order and get ready to dig in.</p></div><MapPin className="size-5" /></div><div className="bite-step-note"><span>THE BEST PART?</span><strong>You’re only a few taps away.</strong></div></div>
     </section>
     <section className="bite-last-call"><div className="mx-auto flex max-w-[1440px] flex-col gap-7 px-5 py-14 sm:px-8 md:flex-row md:items-end md:justify-between lg:px-12 lg:py-20"><div><span className="bite-kicker">Your stomach called</span><h2>IT SAID<br /><i>“LET'S BITE.”</i></h2></div><Link to="/menu" className="bite-cta inline-flex w-fit items-center rounded-full px-7 py-4 text-sm font-black">Order your happy <ArrowUpRight className="ml-2 size-4" /></Link></div></section>
-    <div className="mx-auto max-w-[1440px] px-5 pb-6 text-xs text-[#77796e] sm:px-8 lg:px-12"><div className="flex flex-wrap items-center justify-between gap-3 border-t border-black/10 pt-5"><span>GOOD FOOD. GOOD MOOD. AUSTRALIAN BITE.</span><span>Pehowa, Haryana · {STORE_HOURS} · Prices may vary during festivals.</span></div></div>
+    <div className="mx-auto max-w-[1440px] px-5 pb-6 text-xs text-[#77796e] sm:px-8 lg:px-12"><div className="flex flex-wrap items-center justify-between gap-3 border-t border-black/10 pt-5"><span>GOOD FOOD. GOOD MOOD. AUSTRALIAN BITE.</span><span>Pehowa, Haryana · {openingHours} · {store?.festival_pricing_note || "Prices may vary during festivals."}</span></div></div>
   </main>;
 }
