@@ -4,8 +4,6 @@ import { Search, SlidersHorizontal, Sparkles, UtensilsCrossed, Leaf, Drumstick, 
 import { useMemo, useState } from "react";
 import { menuSupabase } from "@/integrations/supabase/menu-client";
 import { MenuItemCard, type MenuItem, type MenuVariant } from "@/components/menu-item-card";
-import { useAuth } from "@/hooks/useAuth";
-import { useWishlist } from "@/lib/wishlist";
 import { Input } from "@/components/ui/input";
 
 type RawMenuItem = MenuItem & { variant: string; item_type: "Veg" | "Non-Veg" };
@@ -19,8 +17,6 @@ export const Route = createFileRoute("/menu")({
 });
 
 function MenuPage() {
-  const { user } = useAuth();
-  const { ids, toggle } = useWishlist(user?.id);
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
   const [foodType, setFoodType] = useState<"all" | "Veg" | "Non-Veg">("all");
@@ -81,7 +77,7 @@ function MenuPage() {
         <div className="bite-type-filters" aria-label="Filter by food type"><button type="button" className={foodType === "all" ? "active" : ""} onClick={() => setFoodType("all")}>All</button><button type="button" className={foodType === "Veg" ? "active" : ""} onClick={() => setFoodType("Veg")}>Veg</button><button type="button" className={foodType === "Non-Veg" ? "active" : ""} onClick={() => setFoodType("Non-Veg")}>Non-veg</button></div>
       </div>
       <div className="mb-7 mt-8 flex items-center gap-3"><div className="grid size-10 place-items-center rounded-xl bg-secondary"><UtensilsCrossed className="size-5 text-primary" /></div><div><p className="text-xs font-black uppercase tracking-[.16em] text-primary">Good food, your call</p><p className="text-sm text-muted-foreground">{query ? `Showing results for “${query}”` : "Choose a category, pick a size, and order your favourites."}</p></div></div>
-      {isLoading ? <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{Array.from({length: 6}).map((_, i) => <div key={i} className="h-[330px] animate-pulse rounded-[26px] bg-muted" />)}</div> : isError ? <div className="rounded-[26px] border border-rose-200 bg-rose-50 p-8 text-center"><p className="font-black text-rose-900">The menu couldn't load just now.</p><p className="mt-2 text-sm text-rose-800">Please refresh the page or call us and we'll help you choose.</p></div> : items.length === 0 ? <div className="rounded-[26px] border border-dashed border-border bg-card p-12 text-center"><p className="text-lg font-black">Nothing matches that search.</p><p className="mt-2 text-sm text-muted-foreground">Try another dish or browse every category.</p><button type="button" className="mt-4 text-sm font-black text-primary underline" onClick={() => { setQuery(""); setActiveCategory("all"); setFoodType("all"); }}>Clear filters</button></div> : <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{items.map((item) => <MenuItemCard key={item.id} item={item} saved={ids.has(item.id)} onToggleSave={(i) => void toggle(i.id, i.name)} />)}</div>}
+      {isLoading ? <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{Array.from({length: 6}).map((_, i) => <div key={i} className="h-[330px] animate-pulse rounded-[26px] bg-muted" />)}</div> : isError ? <div className="rounded-[26px] border border-rose-200 bg-rose-50 p-8 text-center"><p className="font-black text-rose-900">The menu couldn't load just now.</p><p className="mt-2 text-sm text-rose-800">Please refresh the page or call us and we'll help you choose.</p></div> : items.length === 0 ? <div className="rounded-[26px] border border-dashed border-border bg-card p-12 text-center"><p className="text-lg font-black">Nothing matches that search.</p><p className="mt-2 text-sm text-muted-foreground">Try another dish or browse every category.</p><button type="button" className="mt-4 text-sm font-black text-primary underline" onClick={() => { setQuery(""); setActiveCategory("all"); setFoodType("all"); }}>Clear filters</button></div> : <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{items.map((item) => <MenuItemCard key={item.id} item={item} />)}</div>}
       <div className="mt-12 rounded-[26px] bg-[#171a15] p-6 text-white sm:flex sm:items-center sm:justify-between sm:gap-8 sm:p-8"><div><span className="text-xs font-black uppercase tracking-[.18em] text-[#c9f36b]">Need a recommendation?</span><h2 className="mt-2 font-display text-2xl font-black">We're just around the corner.</h2><p className="mt-2 text-sm text-white/60">Near NH-152, Kurukshetra Road, Pehowa.</p></div><a href="tel:+917404339777" className="mt-5 inline-flex items-center justify-center rounded-full bg-[#c9f36b] px-5 py-3 text-sm font-black text-[#171a15] sm:mt-0">Call +91 74043 39777</a></div>
     </section>
   </main>;
