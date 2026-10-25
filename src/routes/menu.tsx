@@ -25,7 +25,7 @@ function MenuPage() {
     queryFn: async () => {
       const [categoriesResult, itemsResult] = await Promise.all([
         menuSupabase.from("menu_categories").select("id,name,sort_order").order("sort_order"),
-        menuSupabase.from("menu_items").select("id,category_id,name,variant,price,item_type,is_available,is_vegetarian,is_spicy,calories,description,sort_order").eq("is_available", true).order("sort_order"),
+        menuSupabase.from("menu_items").select("id,category_id,name,variant,price,item_type,is_available,is_vegetarian,is_spicy,calories,description,image_url,sort_order").eq("is_available", true).order("sort_order"),
       ]);
       if (categoriesResult.error) throw categoriesResult.error;
       if (itemsResult.error) throw itemsResult.error;
