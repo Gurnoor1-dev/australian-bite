@@ -1,11 +1,11 @@
 import {createFileRoute,Link} from "@tanstack/react-router";
 import {useQuery,useQueryClient} from "@tanstack/react-query";
 import {useState} from "react";
-import {Activity,ArrowUpRight,BarChart3,Eye,EyeOff,MessageSquare,Package,ShieldCheck,Star,Store,Truck,Users} from "lucide-react";
+import {Activity,ArrowUpRight,BarChart3,Eye,EyeOff,Package,ShieldCheck,Star,Store,Truck,Users} from "lucide-react";
 import {toast} from "sonner";
 import {supabase} from "@/integrations/supabase/client";
 import {useAuth} from "@/hooks/useAuth";
-import {currency,STORE_ADDRESS,STORE_HOURS} from "@/lib/format";
+import {currency} from "@/lib/format";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 export const Route=createFileRoute("/admin-dashboard")({component:AdminDashboard,head:()=>({meta:[{title:"Owner control | Australian Bite"}]})});
