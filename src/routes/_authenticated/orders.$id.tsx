@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, ChevronRight, CircleDot, Clock3, MapPin, PackageCheck, Phone, Star, Truck, XCircle } from "lucide-react";
+import { Check, CircleDot, MapPin, PackageCheck, Phone, Star, Truck, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
