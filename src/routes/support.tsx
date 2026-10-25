@@ -5,7 +5,7 @@ import { Headphones,MessageCircle,Phone,Send,Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { SUPPORT_PHONE, SUPPORT_PHONE_TEL, STORE_ADDRESS, STORE_HOURS, formatDateTime } from "@/lib/format";
+import { SUPPORT_PHONE, SUPPORT_PHONE_TEL, STORE_HOURS, formatDateTime } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 export const Route=createFileRoute("/support")({head:()=>({meta:[{title:"Support — Australian Bite"},{name:"description",content:"Get help with an Australian Bite order."}]}),component:SupportPage});
