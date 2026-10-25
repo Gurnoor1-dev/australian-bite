@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, Heart, LogOut, Menu, ShoppingBag, UserRound, X } from "lucide-react";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import logo from "@/assets/australian-bite-logo.png";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/hooks/useAuth";
@@ -38,6 +38,6 @@ export function SiteHeader() {
         <Button variant="ghost" size="icon" className="bite-menu-toggle rounded-full md:hidden" onClick={() => setOpen(v => !v)} aria-label={open ? "Close menu" : "Open menu"}>{open ? <X className="size-5" /> : <Menu className="size-5" />}</Button>
       </div>
     </div>
-    <div className={`bite-mobile-panel md:hidden ${open ? "is-open" : ""}`} aria-hidden={!open}><div className="mx-auto max-w-[1440px] space-y-1 px-5 pb-4 pt-2 sm:px-8">{NAV.map((item, index) => <Link key={item.to} to={item.to} onClick={() => setOpen(false)} style={{ "--nav-index": index } as React.CSSProperties} className="bite-mobile-link">{item.label}<ArrowRight className="size-4" /></Link>)}{isStaff && <Link to="/store-dashboard" onClick={() => setOpen(false)} className="bite-mobile-link">Store control<ArrowRight className="size-4" /></Link>}{isAdmin && <Link to="/admin-dashboard" onClick={() => setOpen(false)} className="bite-mobile-link">Owner control<ArrowRight className="size-4" /></Link>}{!user && <Link to="/auth" onClick={() => setOpen(false)} className="bite-mobile-link bite-mobile-signin">Sign in <ArrowUpRight className="size-4" /></Link>}</div></div>
+    <div className={`bite-mobile-panel md:hidden ${open ? "is-open" : ""}`} aria-hidden={!open}><div className="mx-auto max-w-[1440px] space-y-1 px-5 pb-4 pt-2 sm:px-8">{NAV.map((item, index) => <Link key={item.to} to={item.to} onClick={() => setOpen(false)} style={{ "--nav-index": index } as CSSProperties} className="bite-mobile-link">{item.label}<ArrowRight className="size-4" /></Link>)}{isStaff && <Link to="/store-dashboard" onClick={() => setOpen(false)} className="bite-mobile-link">Store control<ArrowRight className="size-4" /></Link>}{isAdmin && <Link to="/admin-dashboard" onClick={() => setOpen(false)} className="bite-mobile-link">Owner control<ArrowRight className="size-4" /></Link>}{!user && <Link to="/auth" onClick={() => setOpen(false)} className="bite-mobile-link bite-mobile-signin">Sign in <ArrowUpRight className="size-4" /></Link>}</div></div>
   </header>;
 }
