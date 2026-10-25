@@ -87,9 +87,11 @@ function foodImageFor(item: Pick<MenuItem, "name" | "image_url">) {
   return FOOD_IMAGES.default;
 }
 
-function handleFoodImageError(event: SyntheticEvent<HTMLImageElement>) {
+function handleFoodImageError(event: SyntheticEvent<HTMLImageElement>, fallback: string) {
   const image = event.currentTarget;
-  if (image.src !== FOOD_IMAGES.default) image.src = FOOD_IMAGES.default;
+  if (image.dataset.fallbackApplied === "true") return;
+  image.dataset.fallbackApplied = "true";
+  image.src = fallback;
 }
 
 export function MenuItemCard({ item, saved, onToggleSave }: { item: MenuItem; saved?: boolean; onToggleSave?: (item: MenuItem) => void }) {
@@ -104,7 +106,7 @@ export function MenuItemCard({ item, saved, onToggleSave }: { item: MenuItem; sa
   return (
     <article className="bite-product-card group relative flex min-h-[420px] flex-col overflow-hidden rounded-[26px] border border-border/80 bg-card shadow-card">
       <div className="bite-product-photo">
-        <img src={foodImageFor(item)} alt={item.name} loading="lazy" decoding="async" onError={handleFoodImageError} />
+        <img src={foodImageFor(item)} alt={item.name} loading="lazy" decoding="async" onError={(event) => handleFoodImageError(event, foodImageFor({ name: item.name, image_url: null }))} />
         <div className="bite-product-photo-shade" />
         <span className="bite-product-brand"><Sparkles className="size-3" /> Made for good moods</span>
         {onToggleSave && <button type="button" aria-label={saved ? `Remove ${item.name} from wishlist` : `Save ${item.name} to wishlist`} aria-pressed={!!saved} onClick={() => onToggleSave(item)} className="bite-product-save"><Heart className={`size-4 ${saved ? "fill-current" : ""}`} /></button>}
