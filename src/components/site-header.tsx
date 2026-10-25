@@ -16,7 +16,7 @@ const NAV = [
 
 export function SiteHeader() {
   const { count } = useCart();
-  const { user, isStaff } = useAuth();
+  const { user, isStaff, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const signOut = async () => { await supabase.auth.signOut(); navigate({ to: "/" }); };
@@ -29,7 +29,7 @@ export function SiteHeader() {
       </Link>
       <nav className="ml-8 hidden items-center gap-1 md:flex">
         {NAV.map(item => <Link key={item.to} to={item.to} className="bite-nav-link" activeProps={{ className: "bite-nav-link bite-nav-active" }}>{item.label}</Link>)}
-        {isStaff && <Link to="/store-dashboard" className="bite-nav-link">Store control</Link>}
+        {isStaff && <Link to="/store-dashboard" className="bite-nav-link">Store control</Link>}{isAdmin && <Link to="/admin-dashboard" className="bite-nav-link">Owner control</Link>}
       </nav>
       <div className="ml-auto flex items-center gap-1.5">
         <Link to="/wishlist" aria-label="Wishlist" className="bite-icon-link hidden sm:grid"><Heart className="size-[18px]" /></Link>
@@ -38,6 +38,6 @@ export function SiteHeader() {
         <Button variant="ghost" size="icon" className="rounded-full md:hidden" onClick={() => setOpen(v => !v)} aria-label={open ? "Close menu" : "Open menu"}>{open ? <X className="size-5" /> : <Menu className="size-5" />}</Button>
       </div>
     </div>
-    {open && <div className="bite-mobile-menu px-5 pb-4 pt-2 md:hidden"><div className="mx-auto max-w-[1440px] space-y-1">{NAV.map(item => <Link key={item.to} to={item.to} onClick={() => setOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-bold">{item.label}<ArrowRight className="size-4" /></Link>)}{isStaff && <Link to="/store-dashboard" onClick={() => setOpen(false)} className="flex px-4 py-3 text-sm font-bold">Store control</Link>}{!user && <Link to="/auth" onClick={() => setOpen(false)} className="flex items-center justify-between rounded-xl bg-[#c9f36b] px-4 py-3 text-sm font-black">Sign in <ArrowUpRight className="size-4" /></Link>}</div></div>}
+    {open && <div className="bite-mobile-menu px-5 pb-4 pt-2 md:hidden"><div className="mx-auto max-w-[1440px] space-y-1">{NAV.map(item => <Link key={item.to} to={item.to} onClick={() => setOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-bold">{item.label}<ArrowRight className="size-4" /></Link>)}{isStaff && <Link to="/store-dashboard" onClick={() => setOpen(false)} className="flex px-4 py-3 text-sm font-bold">Store control</Link>}{isAdmin && <Link to="/admin-dashboard" onClick={() => setOpen(false)} className="flex px-4 py-3 text-sm font-bold">Owner control</Link>}{!user && <Link to="/auth" onClick={() => setOpen(false)} className="flex items-center justify-between rounded-xl bg-[#c9f36b] px-4 py-3 text-sm font-black">Sign in <ArrowUpRight className="size-4" /></Link>}</div></div>}
   </header>;
 }
