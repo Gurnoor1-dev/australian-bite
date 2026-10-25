@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { Heart, Flame, Plus, Sparkles, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -87,7 +87,7 @@ function foodImageFor(item: Pick<MenuItem, "name" | "image_url">) {
   return FOOD_IMAGES.default;
 }
 
-function handleFoodImageError(event: React.SyntheticEvent<HTMLImageElement>) {
+function handleFoodImageError(event: SyntheticEvent<HTMLImageElement>) {
   const image = event.currentTarget;
   if (image.src !== FOOD_IMAGES.default) image.src = FOOD_IMAGES.default;
 }
