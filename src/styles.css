@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -35,8 +35,8 @@
   --color-warning-foreground: var(--warning-foreground);
   --color-charcoal: var(--charcoal);
   --color-charcoal-foreground: var(--charcoal-foreground);
-  --font-display: "Anton", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -205,12 +205,12 @@
   --shadow-float: 0 28px 80px -35px rgb(0 0 0 / 48%);
 }
 @theme inline {
-  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", "Arial Narrow", sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
 @layer base {
-  body { font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif; }
-  h1, h2, h3 { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; letter-spacing: -.025em; }
+  body { font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif; }
+  h1, h2, h3 { font-family: "Outfit", "Arial Narrow", sans-serif; letter-spacing: -.025em; }
 }
 .bite-home { background: #f5f3e9; color: #171a15; }
 .bite-hero { position: relative; overflow: hidden; color: #f5f3e9; background: #171a15; }
@@ -219,7 +219,7 @@
 .bite-eyebrow { color:#c9f36b; }
 .bite-eyebrow span:last-child { color:rgb(245 243 233 / 43%); }
 .bite-pulse { width:8px;height:8px;border-radius:50%;background:#c9f36b;box-shadow:0 0 0 5px rgb(201 243 107 / 12%); }
-.bite-headline { font-family:"Barlow Condensed",Impact,sans-serif; font-weight:900; font-size:clamp(5.3rem,10.5vw,10.8rem); line-height:.76; letter-spacing:-.055em; }
+.bite-headline { font-family:"Outfit",ui-sans-serif,sans-serif; font-weight:900; font-size:clamp(5.3rem,10.5vw,10.8rem); line-height:.76; letter-spacing:-.055em; }
 .bite-headline span { color:#c9f36b; }
 .bite-headline em { color:#f28a65; font-style:normal; }
 .bite-cta { background:#c9f36b!important;color:#171a15!important;box-shadow:0 8px 0 rgb(201 243 107 / 12%);transition:transform .2s,box-shadow .2s; }
@@ -230,22 +230,22 @@
 .bite-image-main { position:absolute;inset:3% 8% 8% 8%;overflow:hidden;border-radius:48% 48% 1.2rem 1.2rem / 38% 38% 1.2rem 1.2rem;transform:rotate(2deg);background:#363b2c; }
 .bite-image-main img { width:100%;height:100%;object-fit:cover;filter:saturate(.92); }
 .bite-image-shade { position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgb(15 17 13 / 50%)); }
-.bite-stamp { position:absolute;z-index:3;left:0;top:8%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;width:94px;height:94px;border-radius:50%;background:#f28a65;color:#171a15;font-family:"Barlow Condensed",sans-serif;font-size:1rem;font-weight:900;line-height:.85;text-align:center;transform:rotate(-13deg);box-shadow:0 10px 35px #0003; }
+.bite-stamp { position:absolute;z-index:3;left:0;top:8%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;width:94px;height:94px;border-radius:50%;background:#f28a65;color:#171a15;font-family:"Outfit",sans-serif;font-size:1rem;font-weight:900;line-height:.85;text-align:center;transform:rotate(-13deg);box-shadow:0 10px 35px #0003; }
 .bite-stamp svg { width:16px;height:16px; }
 .bite-float-card { position:absolute;z-index:4;right:0;bottom:3%;width:min(260px,65%);padding:1.25rem 1.3rem 1.4rem;background:#f5f3e9;color:#171a15;box-shadow:0 20px 60px #0004;transform:rotate(-3deg); }
 .bite-card-kicker { color:#676c5b;font-size:.58rem;font-weight:900;letter-spacing:.15em; }
-.bite-float-card strong { display:block;margin-top:.55rem;font-family:"Barlow Condensed",sans-serif;font-size:2rem;line-height:.92;font-weight:900;text-transform:uppercase; }
+.bite-float-card strong { display:block;margin-top:.55rem;font-family:"Outfit",sans-serif;font-size:2rem;line-height:.92;font-weight:900;text-transform:uppercase; }
 .bite-float-card a { position:absolute;right:1rem;bottom:1rem;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#c9f36b; }
 .bite-side-note { position:absolute;left:0;bottom:17%;z-index:2;font-size:.6rem;font-weight:900;line-height:1.5;letter-spacing:.17em;color:#c9f36b;transform:rotate(-8deg); }
 .bite-side-note span { font-size:1.4rem; }
 .bite-vertical-label { position:absolute;right:0;top:16%;writing-mode:vertical-rl;font-size:.55rem;font-weight:800;letter-spacing:.19em;color:#f5f3e9a0; }
 .bite-marquee { position:relative;z-index:2;overflow:hidden;background:#c9f36b;color:#171a15;border-block:1px solid #171a15;padding:13px 0;white-space:nowrap; }
-.bite-marquee div { width:max-content;font-family:"Barlow Condensed",sans-serif;font-size:1.05rem;font-weight:900;letter-spacing:.13em;animation:bite-marquee 32s linear infinite; }
+.bite-marquee div { width:max-content;font-family:"Outfit",sans-serif;font-size:1.05rem;font-weight:900;letter-spacing:.13em;animation:bite-marquee 32s linear infinite; }
 .bite-marquee span { margin:0 1.4rem;color:#f28a65; }
 @keyframes bite-marquee { to { transform:translateX(-30%); } }
 .bite-section-top { display:flex;align-items:flex-end;justify-content:space-between;gap:2rem; }
 .bite-kicker { color:#68734f; }
-.bite-section-title { margin-top:.85rem;font-family:"Barlow Condensed",Impact,sans-serif;font-size:clamp(3.5rem,7vw,6.8rem);font-weight:900;line-height:.78;letter-spacing:-.045em; }
+.bite-section-title { margin-top:.85rem;font-family:"Outfit",ui-sans-serif,sans-serif;font-size:clamp(3.5rem,7vw,6.8rem);font-weight:900;line-height:.78;letter-spacing:-.045em; }
 .bite-section-title i { color:#8cae42;font-style:normal; }
 .bite-counter { padding-bottom:.4rem;font-size:.65rem;font-weight:900;letter-spacing:.14em;color:#77796e;white-space:nowrap; }
 .bite-round-link { display:flex;align-items:center;gap:1rem;border:1px solid #bfc2b2;border-radius:999px;padding:.8rem .9rem .8rem 1.25rem;font-size:.7rem;font-weight:900;letter-spacing:.1em;transition:background .2s,transform .2s; }
@@ -258,19 +258,19 @@
 .bite-feature-overlay { position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgb(0 0 0 / 25%),transparent 35%,rgb(0 0 0 / 75%)); }
 .bite-feature-index { font-size:.6rem;font-weight:900;letter-spacing:.14em;color:#fff; }
 .bite-feature-bottom { display:flex;align-items:flex-end;justify-content:space-between;gap:.5rem; }
-.bite-feature-bottom h3 { font-family:"Barlow Condensed",sans-serif;font-size:clamp(2.8rem,4vw,4.4rem);font-weight:900;line-height:.78;letter-spacing:-.035em; }
+.bite-feature-bottom h3 { font-family:"Outfit",sans-serif;font-size:clamp(2.8rem,4vw,4.4rem);font-weight:900;line-height:.78;letter-spacing:-.035em; }
 .bite-feature-bottom p { margin-top:.8rem;font-size:.75rem;color:#ffffffbd; }
 .bite-feature-arrow { display:grid;flex-shrink:0;place-items:center;width:44px;height:44px;border-radius:50%;background:#c9f36b;color:#171a15;transition:transform .2s; }
 .bite-feature-card:hover .bite-feature-arrow { transform:rotate(45deg); }
 .bite-feature-fries { min-height:370px;margin-top:2rem; }
 .bite-feature-wings { min-height:370px;margin-top:4rem; }
 .bite-offer-card { position:relative;min-height:190px;overflow:hidden;padding:1.5rem;border:1px solid rgb(255 255 255 / 13%);border-radius:1rem;background:#20251b;color:#f5f3e9; }
-.bite-offer-number { position:absolute;right:1rem;top:.5rem;font-family:"Barlow Condensed",sans-serif;font-size:4.5rem;font-weight:900;color:rgb(255 255 255 / 6%); }
-.bite-offer-code { font-family:"Barlow Condensed",sans-serif;font-size:2.5rem;font-weight:900;color:#c9f36b; }
-.bite-offer-card h3 { margin-top:.25rem;font-family:"DM Sans",sans-serif;font-size:1rem;font-weight:800; }
+.bite-offer-number { position:absolute;right:1rem;top:.5rem;font-family:"Outfit",sans-serif;font-size:4.5rem;font-weight:900;color:rgb(255 255 255 / 6%); }
+.bite-offer-code { font-family:"Outfit",sans-serif;font-size:2.5rem;font-weight:900;color:#c9f36b; }
+.bite-offer-card h3 { margin-top:.25rem;font-family:"Plus Jakarta Sans",sans-serif;font-size:1rem;font-weight:800; }
 .bite-menu-section { background:#e9eadf; }
 .bite-empty-menu { display:flex;align-items:center;justify-content:space-between;gap:2rem;padding:2rem;border:1px solid #d5d8c8;border-radius:1rem;background:#f5f3e9; }
-.bite-empty-menu h3 { margin-top:.8rem;font-family:"Barlow Condensed",sans-serif;font-size:2.5rem;font-weight:900;line-height:.9;text-transform:uppercase; }
+.bite-empty-menu h3 { margin-top:.8rem;font-family:"Outfit",sans-serif;font-size:2.5rem;font-weight:900;line-height:.9;text-transform:uppercase; }
 .bite-empty-menu p { margin-top:.6rem;color:#686b62;font-size:.875rem; }
 .bite-outline-cta { display:inline-flex;align-items:center;gap:.7rem;border:1px solid #bfc2b2;border-radius:999px;padding:.9rem 1.3rem;font-size:.8rem;font-weight:900;transition:background .2s; }
 .bite-outline-cta:hover { background:#fffdf5; }
@@ -278,15 +278,15 @@
 .bite-dark-cta:hover { transform:translateY(-2px);background:#30372a; }
 .bite-steps { border-top:1px solid #d7d9ca; }
 .bite-step { display:grid;grid-template-columns:48px 1fr 24px;align-items:center;gap:1rem;padding:1.35rem .2rem;border-bottom:1px solid #d7d9ca; }
-.bite-step>span { font-family:"Barlow Condensed",sans-serif;font-size:1.2rem;font-weight:900;color:#8cae42; }
-.bite-step h3 { font-family:"DM Sans",sans-serif;font-size:.95rem;font-weight:800;letter-spacing:-.02em; }
+.bite-step>span { font-family:"Outfit",sans-serif;font-size:1.2rem;font-weight:900;color:#8cae42; }
+.bite-step h3 { font-family:"Plus Jakarta Sans",sans-serif;font-size:.95rem;font-weight:800;letter-spacing:-.02em; }
 .bite-step p { margin-top:.25rem;font-size:.8rem;color:#686b62; }
 .bite-step>svg { color:#7e866c; }
 .bite-step-note { display:flex;flex-direction:column;gap:.4rem;padding:1.2rem;margin-top:1rem;border-radius:.75rem;background:#c9f36b; }
 .bite-step-note span { font-size:.6rem;font-weight:900;letter-spacing:.15em; }
-.bite-step-note strong { font-family:"Barlow Condensed",sans-serif;font-size:1.7rem;font-weight:900;text-transform:uppercase; }
+.bite-step-note strong { font-family:"Outfit",sans-serif;font-size:1.7rem;font-weight:900;text-transform:uppercase; }
 .bite-last-call { overflow:hidden;background:#f28a65;color:#171a15; }
-.bite-last-call h2 { margin-top:.8rem;font-family:"Barlow Condensed",sans-serif;font-size:clamp(3.8rem,8vw,8rem);font-weight:900;line-height:.77;letter-spacing:-.05em; }
+.bite-last-call h2 { margin-top:.8rem;font-family:"Outfit",sans-serif;font-size:clamp(3.8rem,8vw,8rem);font-weight:900;line-height:.77;letter-spacing:-.05em; }
 .bite-last-call h2 i { color:#fff6e5;font-style:normal; }
 @media (max-width: 767px) {
   .bite-headline { font-size:clamp(5.2rem,21vw,8rem); }
@@ -306,9 +306,9 @@
 
 .bite-header { background:rgb(245 243 233 / 94%);border-bottom:1px solid #dedfd1;backdrop-filter:blur(18px);color:#171a15; }
 .bite-brand { display:flex;align-items:center;gap:.65rem;flex-shrink:0; }
-.bite-brand-mark { display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#171a15;color:#c9f36b;font-family:"Barlow Condensed",sans-serif;font-size:1.1rem;font-weight:900;letter-spacing:-.06em; }
+.bite-brand-mark { display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#171a15;color:#c9f36b;font-family:"Outfit",sans-serif;font-size:1.1rem;font-weight:900;letter-spacing:-.06em; }
 .bite-brand-mark span { position:absolute;margin: -25px 0 0 30px;color:#f28a65;font-size:.9rem; }
-.bite-brand-name { font-family:"Barlow Condensed",sans-serif;font-size:1.13rem;font-weight:900;line-height:.82;letter-spacing:.02em; }
+.bite-brand-name { font-family:"Outfit",sans-serif;font-size:1.13rem;font-weight:900;line-height:.82;letter-spacing:.02em; }
 .bite-brand-dot { color:#8cae42; }
 .bite-nav-link { border-radius:999px;padding:.7rem .9rem;font-size:.77rem;font-weight:800;color:#686b62;transition:background .2s,color .2s; }
 .bite-nav-link:hover,.bite-nav-active { background:#e8eadb;color:#171a15; }
@@ -327,14 +327,14 @@
 .bite-menu-hero { background:#171a15; color:#f5f3e9; position:relative; overflow:hidden; }
 .bite-menu-hero:before { content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 85% 10%,rgb(201 243 107 / 10%),transparent 34%),radial-gradient(ellipse at 12% 100%,rgb(242 138 101 / 9%),transparent 34%); }
 .bite-menu-hero-grid { position:relative;display:grid;align-items:center;gap:2.5rem;grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr); }
-.bite-menu-title { margin-top:1.25rem;font-family:"Barlow Condensed",Impact,sans-serif;font-size:clamp(3.6rem,7.4vw,7rem);font-weight:900;line-height:.82;letter-spacing:-.045em; }
+.bite-menu-title { margin-top:1.25rem;font-family:"Outfit",ui-sans-serif,sans-serif;font-size:clamp(3.6rem,7.4vw,7rem);font-weight:900;line-height:.82;letter-spacing:-.045em; }
 .bite-menu-title i { color:#c9f36b;font-style:normal; }
 .bite-menu-photo { position:relative;min-height:330px;overflow:hidden;border-radius:1rem 1rem 5rem 1rem;transform:rotate(1.5deg);background:#35392d;box-shadow:0 28px 60px #0005; }
 .bite-menu-photo img { position:absolute;inset:0;width:100%;height:100%;object-fit:cover; }
 .bite-menu-photo:after { content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgb(0 0 0 / 72%),transparent 65%); }
 .bite-menu-photo div { position:absolute;z-index:1;left:1.5rem;bottom:1.5rem; }
 .bite-menu-photo span { display:block;font-size:.6rem;font-weight:900;letter-spacing:.16em;color:#c9f36b; }
-.bite-menu-photo strong { display:block;margin-top:.5rem;font-family:"Barlow Condensed",sans-serif;font-size:2.8rem;line-height:.82;text-transform:uppercase; }
+.bite-menu-photo strong { display:block;margin-top:.5rem;font-family:"Outfit",sans-serif;font-size:2.8rem;line-height:.82;text-transform:uppercase; }
 .bite-menu-proof { display:inline-flex;align-items:center;gap:.5rem;border:1px solid rgb(255 255 255 / 12%);border-radius:999px;padding:.65rem .85rem;background:rgb(255 255 255 / 4%); }
 .bite-menu-search { position:relative;display:flex;align-items:center;gap:1rem;padding:.6rem;border:1px solid rgb(255 255 255 / 12%);border-radius:1rem;background:rgb(255 255 255 / 6%);backdrop-filter:blur(12px); }
 .bite-filter-bar { position:sticky;top:76px;z-index:20;padding:.75rem;border:1px solid #e0e1d5;border-radius:1rem;background:rgb(245 243 233 / 94%);backdrop-filter:blur(16px);box-shadow:0 12px 30px #171a150a; }
@@ -354,3 +354,106 @@
 }
 
 .dash-tab{display:inline-flex;align-items:center;gap:.5rem;border:1px solid #dfe1d5;border-radius:999px;background:#fffdf5;padding:.7rem 1rem;font-size:.78rem;font-weight:900;color:#5b5f52;transition:all .18s}.dash-tab.active,.dash-tab:hover{border-color:#171a15;background:#171a15;color:#c9f36b}
+
+
+/* Australian Bite storefront polish — motion stays on opacity/transform for smooth compositing. */
+.bite-header {
+  border-bottom: 1px solid rgb(23 26 21 / 7%);
+  background: rgb(245 243 233 / 92%);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  backdrop-filter: blur(18px) saturate(1.15);
+  transition: background-color 360ms cubic-bezier(.16,1,.3,1), box-shadow 360ms cubic-bezier(.16,1,.3,1), border-color 360ms ease;
+}
+.bite-header-inner { position: relative; }
+.bite-brand { display:inline-flex;align-items:center;flex-shrink:0;transform-origin:left center;transition:transform 420ms cubic-bezier(.16,1,.3,1); }
+.bite-brand:hover { transform:translate3d(0,-1px,0) scale(1.012); }
+.bite-brand-logo { display:block;width:auto;height:48px;max-width:180px;object-fit:contain; }
+.bite-hero-logo { width:30px;height:30px;object-fit:contain;border-radius:7px;background:#f5f3e9;padding:2px; }
+.bite-nav-link { position:relative;isolation:isolate;transition:color 300ms ease,background-color 300ms ease,transform 420ms cubic-bezier(.16,1,.3,1); }
+.bite-nav-link::after { content:"";position:absolute;left:18%;right:18%;bottom:5px;height:2px;border-radius:99px;background:#8caf42;transform:scaleX(0);transform-origin:center;transition:transform 420ms cubic-bezier(.16,1,.3,1); }
+.bite-nav-link:hover { transform:translate3d(0,-2px,0); }
+.bite-nav-link:hover::after,.bite-nav-active::after { transform:scaleX(1); }
+.bite-nav-active { box-shadow:inset 0 0 0 1px rgb(140 175 66 / 12%); }
+.bite-cart-link { position:relative;transition:transform 360ms cubic-bezier(.16,1,.3,1),background-color 300ms ease,box-shadow 360ms ease; }
+.bite-cart-link:hover { transform:translate3d(0,-2px,0);box-shadow:0 10px 22px rgb(23 26 21 / 12%); }
+.bite-cart-link:active,.bite-icon-link:active,.bite-menu-toggle:active { transform:scale(.96); }
+.bite-cart-count { display:inline-grid;min-width:18px;height:18px;place-items:center;border-radius:999px;background:#c9f36b;color:#171a15;font-size:10px;font-weight:900;line-height:1;padding:0 4px;animation:bite-count-pop 300ms cubic-bezier(.16,1,.3,1); }
+@keyframes bite-count-pop { 0%{transform:scale(.72)} 70%{transform:scale(1.12)} 100%{transform:scale(1)} }
+.bite-icon-link,.bite-signin,.bite-menu-toggle { transition:transform 360ms cubic-bezier(.16,1,.3,1),background-color 280ms ease,color 280ms ease; }
+.bite-icon-link:hover,.bite-signin:hover { transform:translate3d(0,-2px,0); }
+.bite-mobile-panel { display:grid;grid-template-rows:0fr;opacity:0;visibility:hidden;transform:translate3d(0,-7px,0);pointer-events:none;border-top:1px solid transparent;background:rgb(245 243 233 / 98%);transition:grid-template-rows 460ms cubic-bezier(.16,1,.3,1),opacity 280ms ease,transform 460ms cubic-bezier(.16,1,.3,1),border-color 280ms ease,visibility 460ms; }
+.bite-mobile-panel>div { min-height:0;overflow:hidden; }
+.bite-mobile-panel.is-open { grid-template-rows:1fr;opacity:1;visibility:visible;transform:translate3d(0,0,0);pointer-events:auto;border-color:#dedfd1; }
+.bite-mobile-link { display:flex;align-items:center;justify-content:space-between;border-radius:14px;padding:.85rem 1rem;font-size:.9rem;font-weight:800;color:#30352a;opacity:0;transform:translate3d(0,7px,0);transition:opacity 260ms ease,transform 380ms cubic-bezier(.16,1,.3,1),background-color 260ms ease,color 260ms ease; }
+.bite-mobile-panel.is-open .bite-mobile-link { opacity:1;transform:translate3d(0,0,0);transition-delay:calc(var(--nav-index,0) * 32ms); }
+.bite-mobile-link:hover { background:#e8eadb;color:#171a15; }
+.bite-mobile-link svg { transition:transform 320ms cubic-bezier(.16,1,.3,1); }
+.bite-mobile-link:hover svg { transform:translate3d(3px,0,0); }
+.bite-mobile-signin { background:#c9f36b;color:#171a15; }
+.bite-trust-strip { position:relative;z-index:1; }
+.bite-trust-item { display:flex;align-items:center;gap:.8rem;min-width:0;border:1px solid #e4e4d8;border-radius:18px;background:rgb(255 253 245 / 82%);padding:1rem 1.1rem;transition:transform 360ms cubic-bezier(.16,1,.3,1),border-color 280ms ease,box-shadow 360ms ease; }
+.bite-trust-icon { display:grid;place-items:center;width:38px;height:38px;flex-shrink:0;border-radius:12px;background:#e8eadb;color:#46552b; }
+.bite-trust-item strong,.bite-trust-item small { display:block; }
+.bite-trust-item strong { font-size:.83rem;font-weight:900; }
+.bite-trust-item small { margin-top:.15rem;color:#74766c;font-size:.72rem;line-height:1.4; }
+.bite-product-card { transform:translateZ(0);transition:transform 420ms cubic-bezier(.16,1,.3,1),border-color 320ms ease,box-shadow 420ms cubic-bezier(.16,1,.3,1); }
+.bite-product-photo { position:relative;height:205px;overflow:hidden;background:#e8e5d8;isolation:isolate; }
+.bite-product-photo img { width:100%;height:100%;object-fit:cover;transform:scale(1.001);transition:transform 850ms cubic-bezier(.16,1,.3,1),filter 500ms ease; }
+.bite-product-photo-shade { position:absolute;inset:0;background:linear-gradient(180deg,rgb(12 15 10 / 30%),transparent 34%,rgb(12 15 10 / 48%));pointer-events:none; }
+.bite-product-brand { position:absolute;left:14px;top:14px;display:inline-flex;align-items:center;gap:6px;border:1px solid rgb(255 255 255 / 22%);border-radius:999px;background:rgb(23 26 21 / 48%);padding:7px 10px;color:#fff;font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px); }
+.bite-product-save { position:absolute;right:14px;top:14px;display:grid;width:38px;height:38px;place-items:center;border:1px solid rgb(255 255 255 / 25%);border-radius:50%;background:rgb(23 26 21 / 45%);color:#fff;transition:transform 320ms cubic-bezier(.16,1,.3,1),background-color 260ms ease; }
+.bite-product-save:hover { transform:scale(1.07);background:rgb(23 26 21 / 75%); }
+.bite-product-diet { position:absolute;left:14px;bottom:14px;display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 9px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em; }
+.bite-product-diet.is-veg { background:#e8f5dc;color:#285d2b; }
+.bite-product-diet.is-nonveg { background:#fff0e9;color:#8b3523; }
+.bite-product-add { transition:transform 360ms cubic-bezier(.16,1,.3,1),box-shadow 360ms ease,background-color 280ms ease; }
+.bite-product-add:active { transform:scale(.985); }
+.bite-payment-options { transform-origin:top; }
+.bite-checkout-trust { display:flex;align-items:flex-start;gap:.55rem;border:1px solid rgb(255 255 255 / 10%);border-radius:12px;padding:11px 12px;color:rgb(255 255 255 / 70%);font-size:11px;line-height:1.5; }
+.bite-order-status { display:inline-flex;align-items:center;gap:.4rem; }
+.bite-order-timeline li { animation:bite-timeline-in 420ms both; }
+@keyframes bite-timeline-in { from{opacity:0;transform:translate3d(0,5px,0)} to{opacity:1;transform:translate3d(0,0,0)} }
+:where(a,button,input,select,textarea):focus-visible { outline:3px solid #7f9c3b;outline-offset:3px; }
+@media (hover:hover) and (min-width:768px) {
+ .bite-trust-item:hover { transform:translate3d(0,-2px,0);border-color:#cbd6b0;box-shadow:0 12px 28px rgb(23 26 21 / 5%); }
+ .bite-product-card:hover { transform:translate3d(0,-5px,0);border-color:rgb(140 175 66 / 45%);box-shadow:0 25px 55px -32px rgb(23 26 21 / 35%); }
+ .bite-product-card:hover .bite-product-photo img { transform:scale(1.055); }
+}
+@media (max-width:767px) {
+ .bite-brand-logo { height:42px;max-width:145px; }
+ .bite-hero-logo { width:25px;height:25px; }
+ .bite-product-photo { height:190px; }
+ .bite-trust-item { padding:.85rem; }
+ .bite-trust-item strong { font-size:.78rem; }
+ .bite-trust-item small { font-size:.68rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+ *,*::before,*::after { scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important; }
+ .bite-header,.bite-brand,.bite-nav-link,.bite-nav-link::after,.bite-cart-link,.bite-icon-link,.bite-signin,.bite-menu-toggle,.bite-mobile-panel,.bite-mobile-link,.bite-mobile-link svg,.bite-product-card,.bite-product-photo img,.bite-product-save,.bite-product-add,.bite-trust-item { transform:none!important; }
+}
+
+.bite-order-progress { display:flex;align-items:center;gap:.7rem;overflow-x:auto;padding:.9rem 1rem;border:1px solid #e3e4d9;border-radius:16px;background:rgb(255 253 245 / 75%);color:#77796e;font-size:.72rem;font-weight:800;white-space:nowrap; }
+.bite-order-progress>span:not(.bite-progress-line) { display:inline-flex;align-items:center;gap:.45rem; }
+.bite-order-progress b { display:grid;width:27px;height:27px;place-items:center;border-radius:50%;background:#e9e9df;color:#77796e;font-size:.65rem; }
+.bite-order-progress .is-current { color:#22291d; }
+.bite-order-progress .is-current b { background:#c9f36b;color:#171a15; }
+.bite-progress-line { width:clamp(12px,5vw,60px);height:1px;flex:0 0 auto;background:#d8dacd; }
+@media (max-width:520px) { .bite-order-progress { gap:.45rem;padding:.75rem;font-size:.65rem; } .bite-order-progress b { width:24px;height:24px; } .bite-progress-line { width:12px; } }
+
+
+/* Image-free menu cards: restore the original branded gradient treatment. */
+.bite-product-photo {
+  background: radial-gradient(ellipse at 78% 20%, rgb(201 243 107 / 24%), transparent 38%), radial-gradient(ellipse at 12% 95%, rgb(242 138 101 / 22%), transparent 42%), linear-gradient(135deg, #171a15 0%, #303829 56%, #555e3b 100%);
+}
+.bite-product-photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(125deg, transparent 28%, rgb(255 255 255 / 7%) 48%, transparent 66%);
+  pointer-events: none;
+}
+.bite-product-photo-shade { background: linear-gradient(180deg, rgb(12 15 10 / 10%), transparent 40%, rgb(12 15 10 / 22%)); }
+@layer base {
+  body { font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  h1, h2, h3 { font-family: "Outfit", ui-sans-serif, sans-serif; }
+}

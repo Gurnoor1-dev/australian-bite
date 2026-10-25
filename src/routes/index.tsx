@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { currency, type Offer, STORE_HOURS } from "@/lib/format";
 import { useStoreSettings } from "@/hooks/useStoreSettings";
 import { db } from "@/lib/db";
+import logo from "@/assets/australian-bite-logo.png";
 
 const foodImage = "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1200&q=85";
 const friesImage = "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=900&q=85";
@@ -43,7 +44,7 @@ function Home() {
       <div className="bite-hero-noise" />
       <div className="mx-auto grid max-w-[1440px] items-center gap-8 px-5 pb-14 pt-10 sm:px-8 sm:pb-20 lg:grid-cols-[.94fr_1.06fr] lg:px-12 lg:pb-24 lg:pt-14">
         <div className="relative z-10 py-5 lg:py-12">
-          <div className="bite-eyebrow"><span className="bite-pulse" /> PEHOWA, COME HUNGRY. <span className="ml-1">PIZZA · CURRIES · MORE</span></div>
+          <div className="bite-eyebrow"><img src={logo} alt="" className="bite-hero-logo" width="30" height="30" decoding="async" /><span className="bite-pulse" /> PEHOWA, COME HUNGRY. <span className="ml-1">PIZZA · CURRIES · MORE</span></div>
           <h1 className="bite-headline mt-7">BITE<br /><span>INTO</span><br /><em>HAPPY.</em></h1>
           <p className="mt-6 max-w-md text-base leading-7 text-white/65 sm:text-lg">From oven-hot pizzas and comforting curries to biryani, shakes and crispy sides — find the food you came for, with prices that are easy to love.</p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -54,7 +55,7 @@ function Home() {
         </div>
         <div className="bite-visual-wrap">
           <div className="bite-stamp"><span>GOOD<br />MOOD</span><Star className="size-5 fill-current" /><span>FOOD</span></div>
-          <div className="bite-image-main"><img src={foodImage} alt="Freshly baked pizza with bubbling cheese" /><div className="bite-image-shade" /></div>
+          <div className="bite-image-main"><img src={foodImage} alt="Freshly baked pizza with bubbling cheese" fetchPriority="high" decoding="async" /><div className="bite-image-shade" /></div>
           <div className="bite-float-card"><span className="bite-card-kicker">THE CROWD PLEASER</span><strong>Cheesy.<br />Fresh. Yours.</strong><Link to="/menu" aria-label="Explore our menu"><ArrowUpRight className="size-5" /></Link></div>
           <div className="bite-side-note">FRESH FROM<br />THE KITCHEN <span>↗</span></div>
           <div className="bite-vertical-label">AUSTRALIAN BITE · YOUR NEW LOCAL</div>
@@ -63,14 +64,20 @@ function Home() {
       <div className="bite-marquee" aria-label="Australian Bite food slogan"><div>BIG FLAVOUR <span>✳</span> NO BORING BITES <span>✳</span> GOOD MOOD FOOD <span>✳</span> BIG FLAVOUR <span>✳</span> NO BORING BITES <span>✳</span></div></div>
     </section>
 
+    <section className="bite-trust-strip mx-auto grid max-w-[1440px] gap-3 px-5 py-5 sm:grid-cols-3 sm:px-8 lg:px-12" aria-label="Ordering benefits">
+      <div className="bite-trust-item"><span className="bite-trust-icon"><Flame className="size-4" /></span><span><strong>Made for your cravings</strong><small>Freshly prepared favourites</small></span></div>
+      <div className="bite-trust-item"><span className="bite-trust-icon"><Truck className="size-4" /></span><span><strong>Pickup or delivery</strong><small>Choose what works for you</small></span></div>
+      <div className="bite-trust-item"><span className="bite-trust-icon"><Clock3 className="size-4" /></span><span><strong>Order updates</strong><small>Follow your order status online</small></span></div>
+    </section>
+
     {(offers ?? []).length > 0 && <section className="mx-auto max-w-[1440px] px-5 pt-12 sm:px-8 lg:px-12"><div className="bite-section-top"><div><span className="bite-kicker">A little something extra</span><h2 className="bite-section-title">GOOD DEALS.<br /><i>GREAT DAYS.</i></h2></div><span className="bite-counter">01 / OFFERS</span></div><div className="mt-7 grid gap-4 md:grid-cols-3">{offers!.map((offer, i) => <Reveal key={offer.id} delay={i * 70}><article className="bite-offer-card"><span className="bite-offer-number">0{i + 1}</span><p className="bite-offer-code">{offer.code}</p><h3>{offer.title}</h3><p className="mt-2 text-sm leading-6 text-white/60">{offer.description}</p></article></Reveal>)}</div></section>}
 
     <section className="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
       <div className="bite-section-top"><div><span className="bite-kicker">Worth getting your hands messy for</span><h2 className="bite-section-title">THE <i>GOOD</i><br />STUFF.</h2><p className="mt-4 max-w-md text-sm leading-6 text-[#686b62] sm:text-base">Pizza, paneer, biryani, wraps, shakes and sides — all in one place.</p></div><Link to="/menu" className="bite-round-link">FULL MENU <ArrowUpRight className="size-5" /></Link></div>
       <div className="bite-feature-strip mt-10">
-        <Link to="/menu" className="bite-feature-card bite-feature-burger"><img src={foodImage} alt="Signature burger" /><div className="bite-feature-overlay" /><span className="bite-feature-index">01 — THE ICON</span><div className="bite-feature-bottom"><div><h3>THE<br />STACK.</h3><p>Hot, cheesy, made your way.</p></div><span className="bite-feature-arrow"><ArrowUpRight className="size-5" /></span></div></Link>
-        <Link to="/menu" className="bite-feature-card bite-feature-fries"><img src={friesImage} alt="Golden crispy fries" /><div className="bite-feature-overlay" /><span className="bite-feature-index">02 — THE SIDEKICK</span><div className="bite-feature-bottom"><div><h3>GOLDEN<br />HOUR.</h3><p>Comfort food, full of flavour.</p></div><span className="bite-feature-arrow"><ArrowUpRight className="size-5" /></span></div></Link>
-        <Link to="/menu" className="bite-feature-card bite-feature-wings"><img src={wingsImage} alt="Crispy glazed chicken wings" /><div className="bite-feature-overlay" /><span className="bite-feature-index">03 — THE SAUCY ONE</span><div className="bite-feature-bottom"><div><h3>WING<br />THING.</h3><p>A cool sip makes it better.</p></div><span className="bite-feature-arrow"><ArrowUpRight className="size-5" /></span></div></Link>
+        <Link to="/menu" className="bite-feature-card bite-feature-burger"><img src={foodImage} alt="Signature burger" loading="lazy" decoding="async" /><div className="bite-feature-overlay" /><span className="bite-feature-index">01 — THE ICON</span><div className="bite-feature-bottom"><div><h3>THE<br />STACK.</h3><p>Hot, cheesy, made your way.</p></div><span className="bite-feature-arrow"><ArrowUpRight className="size-5" /></span></div></Link>
+        <Link to="/menu" className="bite-feature-card bite-feature-fries"><img src={friesImage} alt="Golden crispy fries" loading="lazy" decoding="async" /><div className="bite-feature-overlay" /><span className="bite-feature-index">02 — THE SIDEKICK</span><div className="bite-feature-bottom"><div><h3>GOLDEN<br />HOUR.</h3><p>Comfort food, full of flavour.</p></div><span className="bite-feature-arrow"><ArrowUpRight className="size-5" /></span></div></Link>
+        <Link to="/menu" className="bite-feature-card bite-feature-wings"><img src={wingsImage} alt="Crispy glazed chicken wings" loading="lazy" decoding="async" /><div className="bite-feature-overlay" /><span className="bite-feature-index">03 — THE SAUCY ONE</span><div className="bite-feature-bottom"><div><h3>WING<br />THING.</h3><p>A cool sip makes it better.</p></div><span className="bite-feature-arrow"><ArrowUpRight className="size-5" /></span></div></Link>
       </div>
     </section>
 
