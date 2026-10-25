@@ -26,7 +26,7 @@ alter table public.order_item_addons enable row level security;
 drop policy if exists "Order participants can read add-ons" on public.order_item_addons;
 create policy "Order participants can read add-ons" on public.order_item_addons for select to authenticated using(exists(
  select 1 from public.order_items oi join public.orders o on o.id=oi.order_id
- where oi.id=order_item_addons.order_item_id and (o.customer_id=(select auth.uid()) or private.has_any_role(array['store','admin','delivery']::public.app_role[]))
+ where oi.id=order_item_addons.order_item_id and (o.customer_id=(select auth.uid()) or private.has_any_role(array['store','admin','delivery_partner']::public.app_role[]))
 ));
 create index if not exists order_item_addons_item_idx on public.order_item_addons(order_item_id);
 create index if not exists add_on_options_available_sort_idx on public.add_on_options(is_available,sort_order);
