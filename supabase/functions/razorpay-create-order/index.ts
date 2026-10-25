@@ -66,13 +66,19 @@ Deno.serve(async (req: Request) => {
   }
 
   const admin = createClient(url, serviceKey, { auth: { persistSession: false } });
-  const { error: saveError } = await admin.from("orders")
+  const { data: saved, error: saveError } = await admin.from("orders")
     .update({ razorpay_order_id: gatewayBody.id, payment_provider: "razorpay" })
-    .eq("id", order.id).eq("customer_id", user.id).is("razorpay_order_id", null);
+    .eq("id", order.id).eq("customer_id", user.id).is("razorpay_order_id", null)
+    .select("razorpay_order_id").maybeSingle();
   if (saveError) {
     console.error("Could not persist Razorpay order reference", saveError.message);
     return reply(500, { error: "Could not prepare this payment. Contact the store before retrying." });
   }
+  if (!saved?.razorpay_order_id) {
+    const { data: latest } = await admin.from("orders").select("razorpay_order_id").eq("id", order.id).eq("customer_id", user.id).maybeSingle();
+    if (!latest?.razorpay_order_id) return reply(409, { error: "The payment reference changed. Refresh checkout and retry." });
+    return reply(200, { keyId: razorpayKey, razorpayOrderId: latest.razorpay_order_id, amount: Number(order.total) * 100, currency: "INR", orderNumber: order.order_number });
+  }
 
-  return reply(200, { keyId: razorpayKey, razorpayOrderId: gatewayBody.id, amount: Number(order.total) * 100, currency: "INR", orderNumber: order.order_number });
+  return reply(200, { keyId: razorpayKey, razorpayOrderId: saved.razorpay_order_id, amount: Number(order.total) * 100, currency: "INR", orderNumber: order.order_number });
 });
