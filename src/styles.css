@@ -354,3 +354,80 @@
 }
 
 .dash-tab{display:inline-flex;align-items:center;gap:.5rem;border:1px solid #dfe1d5;border-radius:999px;background:#fffdf5;padding:.7rem 1rem;font-size:.78rem;font-weight:900;color:#5b5f52;transition:all .18s}.dash-tab.active,.dash-tab:hover{border-color:#171a15;background:#171a15;color:#c9f36b}
+
+
+/* Australian Bite storefront polish — motion stays on opacity/transform for smooth compositing. */
+.bite-header {
+  border-bottom: 1px solid rgb(23 26 21 / 7%);
+  background: rgb(245 243 233 / 92%);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  backdrop-filter: blur(18px) saturate(1.15);
+  transition: background-color 360ms cubic-bezier(.16,1,.3,1), box-shadow 360ms cubic-bezier(.16,1,.3,1), border-color 360ms ease;
+}
+.bite-header-inner { position: relative; }
+.bite-brand { display:inline-flex;align-items:center;flex-shrink:0;transform-origin:left center;transition:transform 420ms cubic-bezier(.16,1,.3,1); }
+.bite-brand:hover { transform:translate3d(0,-1px,0) scale(1.012); }
+.bite-brand-logo { display:block;width:auto;height:48px;max-width:180px;object-fit:contain; }
+.bite-hero-logo { width:30px;height:30px;object-fit:contain;border-radius:7px;background:#f5f3e9;padding:2px; }
+.bite-nav-link { position:relative;isolation:isolate;transition:color 300ms ease,background-color 300ms ease,transform 420ms cubic-bezier(.16,1,.3,1); }
+.bite-nav-link::after { content:"";position:absolute;left:18%;right:18%;bottom:5px;height:2px;border-radius:99px;background:#8caf42;transform:scaleX(0);transform-origin:center;transition:transform 420ms cubic-bezier(.16,1,.3,1); }
+.bite-nav-link:hover { transform:translate3d(0,-2px,0); }
+.bite-nav-link:hover::after,.bite-nav-active::after { transform:scaleX(1); }
+.bite-nav-active { box-shadow:inset 0 0 0 1px rgb(140 175 66 / 12%); }
+.bite-cart-link { position:relative;transition:transform 360ms cubic-bezier(.16,1,.3,1),background-color 300ms ease,box-shadow 360ms ease; }
+.bite-cart-link:hover { transform:translate3d(0,-2px,0);box-shadow:0 10px 22px rgb(23 26 21 / 12%); }
+.bite-cart-link:active,.bite-icon-link:active,.bite-menu-toggle:active { transform:scale(.96); }
+.bite-cart-count { display:inline-grid;min-width:18px;height:18px;place-items:center;border-radius:999px;background:#c9f36b;color:#171a15;font-size:10px;font-weight:900;line-height:1;padding:0 4px;animation:bite-count-pop 300ms cubic-bezier(.16,1,.3,1); }
+@keyframes bite-count-pop { 0%{transform:scale(.72)} 70%{transform:scale(1.12)} 100%{transform:scale(1)} }
+.bite-icon-link,.bite-signin,.bite-menu-toggle { transition:transform 360ms cubic-bezier(.16,1,.3,1),background-color 280ms ease,color 280ms ease; }
+.bite-icon-link:hover,.bite-signin:hover { transform:translate3d(0,-2px,0); }
+.bite-mobile-panel { display:grid;grid-template-rows:0fr;opacity:0;visibility:hidden;transform:translate3d(0,-7px,0);pointer-events:none;border-top:1px solid transparent;background:rgb(245 243 233 / 98%);transition:grid-template-rows 460ms cubic-bezier(.16,1,.3,1),opacity 280ms ease,transform 460ms cubic-bezier(.16,1,.3,1),border-color 280ms ease,visibility 460ms; }
+.bite-mobile-panel>div { min-height:0;overflow:hidden; }
+.bite-mobile-panel.is-open { grid-template-rows:1fr;opacity:1;visibility:visible;transform:translate3d(0,0,0);pointer-events:auto;border-color:#dedfd1; }
+.bite-mobile-link { display:flex;align-items:center;justify-content:space-between;border-radius:14px;padding:.85rem 1rem;font-size:.9rem;font-weight:800;color:#30352a;opacity:0;transform:translate3d(0,7px,0);transition:opacity 260ms ease,transform 380ms cubic-bezier(.16,1,.3,1),background-color 260ms ease,color 260ms ease; }
+.bite-mobile-panel.is-open .bite-mobile-link { opacity:1;transform:translate3d(0,0,0);transition-delay:calc(var(--nav-index,0) * 32ms); }
+.bite-mobile-link:hover { background:#e8eadb;color:#171a15; }
+.bite-mobile-link svg { transition:transform 320ms cubic-bezier(.16,1,.3,1); }
+.bite-mobile-link:hover svg { transform:translate3d(3px,0,0); }
+.bite-mobile-signin { background:#c9f36b;color:#171a15; }
+.bite-trust-strip { position:relative;z-index:1; }
+.bite-trust-item { display:flex;align-items:center;gap:.8rem;min-width:0;border:1px solid #e4e4d8;border-radius:18px;background:rgb(255 253 245 / 82%);padding:1rem 1.1rem;transition:transform 360ms cubic-bezier(.16,1,.3,1),border-color 280ms ease,box-shadow 360ms ease; }
+.bite-trust-icon { display:grid;place-items:center;width:38px;height:38px;flex-shrink:0;border-radius:12px;background:#e8eadb;color:#46552b; }
+.bite-trust-item strong,.bite-trust-item small { display:block; }
+.bite-trust-item strong { font-size:.83rem;font-weight:900; }
+.bite-trust-item small { margin-top:.15rem;color:#74766c;font-size:.72rem;line-height:1.4; }
+.bite-product-card { transform:translateZ(0);transition:transform 420ms cubic-bezier(.16,1,.3,1),border-color 320ms ease,box-shadow 420ms cubic-bezier(.16,1,.3,1); }
+.bite-product-photo { position:relative;height:205px;overflow:hidden;background:#e8e5d8;isolation:isolate; }
+.bite-product-photo img { width:100%;height:100%;object-fit:cover;transform:scale(1.001);transition:transform 850ms cubic-bezier(.16,1,.3,1),filter 500ms ease; }
+.bite-product-photo-shade { position:absolute;inset:0;background:linear-gradient(180deg,rgb(12 15 10 / 30%),transparent 34%,rgb(12 15 10 / 48%));pointer-events:none; }
+.bite-product-brand { position:absolute;left:14px;top:14px;display:inline-flex;align-items:center;gap:6px;border:1px solid rgb(255 255 255 / 22%);border-radius:999px;background:rgb(23 26 21 / 48%);padding:7px 10px;color:#fff;font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px); }
+.bite-product-save { position:absolute;right:14px;top:14px;display:grid;width:38px;height:38px;place-items:center;border:1px solid rgb(255 255 255 / 25%);border-radius:50%;background:rgb(23 26 21 / 45%);color:#fff;transition:transform 320ms cubic-bezier(.16,1,.3,1),background-color 260ms ease; }
+.bite-product-save:hover { transform:scale(1.07);background:rgb(23 26 21 / 75%); }
+.bite-product-diet { position:absolute;left:14px;bottom:14px;display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 9px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em; }
+.bite-product-diet.is-veg { background:#e8f5dc;color:#285d2b; }
+.bite-product-diet.is-nonveg { background:#fff0e9;color:#8b3523; }
+.bite-product-add { transition:transform 360ms cubic-bezier(.16,1,.3,1),box-shadow 360ms ease,background-color 280ms ease; }
+.bite-product-add:active { transform:scale(.985); }
+.bite-payment-options { transform-origin:top; }
+.bite-checkout-trust { display:flex;align-items:flex-start;gap:.55rem;border:1px solid rgb(255 255 255 / 10%);border-radius:12px;padding:11px 12px;color:rgb(255 255 255 / 70%);font-size:11px;line-height:1.5; }
+.bite-order-status { display:inline-flex;align-items:center;gap:.4rem; }
+.bite-order-timeline li { animation:bite-timeline-in 420ms both; }
+@keyframes bite-timeline-in { from{opacity:0;transform:translate3d(0,5px,0)} to{opacity:1;transform:translate3d(0,0,0)} }
+:where(a,button,input,select,textarea):focus-visible { outline:3px solid #7f9c3b;outline-offset:3px; }
+@media (hover:hover) and (min-width:768px) {
+ .bite-trust-item:hover { transform:translate3d(0,-2px,0);border-color:#cbd6b0;box-shadow:0 12px 28px rgb(23 26 21 / 5%); }
+ .bite-product-card:hover { transform:translate3d(0,-5px,0);border-color:rgb(140 175 66 / 45%);box-shadow:0 25px 55px -32px rgb(23 26 21 / 35%); }
+ .bite-product-card:hover .bite-product-photo img { transform:scale(1.055); }
+}
+@media (max-width:767px) {
+ .bite-brand-logo { height:42px;max-width:145px; }
+ .bite-hero-logo { width:25px;height:25px; }
+ .bite-product-photo { height:190px; }
+ .bite-trust-item { padding:.85rem; }
+ .bite-trust-item strong { font-size:.78rem; }
+ .bite-trust-item small { font-size:.68rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+ *,*::before,*::after { scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important; }
+ .bite-header,.bite-brand,.bite-nav-link,.bite-nav-link::after,.bite-cart-link,.bite-icon-link,.bite-signin,.bite-menu-toggle,.bite-mobile-panel,.bite-mobile-link,.bite-mobile-link svg,.bite-product-card,.bite-product-photo img,.bite-product-save,.bite-product-add,.bite-trust-item { transform:none!important; }
+}
