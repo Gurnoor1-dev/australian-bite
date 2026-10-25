@@ -19,7 +19,7 @@ export function SiteFooter() {
         <div className="grid gap-12 lg:grid-cols-[1.45fr_.7fr_1fr_1fr]">
           <div>
             <Link to="/" aria-label="Australian Bite home" className="inline-flex rounded-2xl bg-background p-2.5 shadow-xl ring-1 ring-white/10 transition-transform hover:-translate-y-0.5">
-              <img src={logo.url} alt="Australian Bite" className="h-14 w-auto object-contain sm:h-16" />
+              <img src={logo} alt="Australian Bite" className="h-14 w-auto object-contain sm:h-16" />
             </Link>
             <p className="mt-5 max-w-sm text-[15px] leading-7 text-charcoal-foreground/65">Pizzas, Indian favourites, biryani, shakes and sides — made for good meals in Pehowa. Find your next favourite and give us a call if you need a hand.</p>
             <div className="mt-6 flex gap-2"><a aria-label="Instagram" href="#" className="grid size-10 place-items-center rounded-full border border-white/10 bg-white/5 transition hover:-translate-y-0.5 hover:bg-primary hover:text-primary-foreground"><Instagram className="size-4" /></a><a aria-label="Facebook" href="#" className="grid size-10 place-items-center rounded-full border border-white/10 bg-white/5 transition hover:-translate-y-0.5 hover:bg-primary hover:text-primary-foreground"><Facebook className="size-4" /></a></div>
