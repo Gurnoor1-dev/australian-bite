@@ -23,18 +23,18 @@ export type MenuItem = {
   is_spicy: boolean;
   calories: number | null;
   category_id: string;
-  variant: string;
-  item_type: "Veg" | "Non-Veg";
+  variant?: string;
+  item_type?: "Veg" | "Non-Veg";
   variantOptions?: MenuVariant[];
 };
 
 export function MenuItemCard({ item, saved, onToggleSave }: { item: MenuItem; saved?: boolean; onToggleSave?: (item: MenuItem) => void }) {
   const { add } = useCart();
-  const options = item.variantOptions?.length ? item.variantOptions : [{ id: item.id, variant: item.variant || "Standard", price: item.price, is_available: item.is_available, item_type: item.item_type }];
+  const options = item.variantOptions?.length ? item.variantOptions : [{ id: item.id, variant: item.variant || "Standard", price: item.price, is_available: item.is_available, item_type: item.item_type ?? (item.is_vegetarian ? "Veg" as const : "Non-Veg" as const) }];
   const [selectedId, setSelectedId] = useState(item.id);
   const selected = options.find((option) => option.id === selectedId) ?? options[0];
   const hasSizeChoice = options.length > 1;
-  const dietaryType = selected.item_type ?? item.item_type;
+  const dietaryType = selected.item_type ?? item.item_type ?? (item.is_vegetarian ? "Veg" : "Non-Veg");
 
   return (
     <article className="group relative flex min-h-[330px] flex-col overflow-hidden rounded-[26px] border border-border/80 bg-card shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-float">
