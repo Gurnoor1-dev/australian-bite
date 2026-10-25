@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { currency, type Offer, STORE_HOURS } from "@/lib/format";
 import { db } from "@/lib/db";
 
-const foodImage = "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=85";
-const friesImage = "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=900&q=85";
-const wingsImage = "https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=900&q=85";
+const foodImage = "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1200&q=85";
+const friesImage = "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=900&q=85";
+const wingsImage = "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=900&q=85";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
