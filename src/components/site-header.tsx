@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 const NAV = [
   { to: "/", label: "Home" },
   { to: "/menu", label: "The menu" },
+  { to: "/customer-dashboard", label: "My account" },
   { to: "/orders", label: "My orders" },
   { to: "/support", label: "Say hello" },
 ] as const;
@@ -28,15 +29,15 @@ export function SiteHeader() {
       </Link>
       <nav className="ml-8 hidden items-center gap-1 md:flex">
         {NAV.map(item => <Link key={item.to} to={item.to} className="bite-nav-link" activeProps={{ className: "bite-nav-link bite-nav-active" }}>{item.label}</Link>)}
-        {isStaff && <Link to="/staff" className="bite-nav-link">Kitchen console</Link>}
+        {isStaff && <Link to="/store-dashboard" className="bite-nav-link">Store control</Link>}
       </nav>
       <div className="ml-auto flex items-center gap-1.5">
         <Link to="/wishlist" aria-label="Wishlist" className="bite-icon-link hidden sm:grid"><Heart className="size-[18px]" /></Link>
         <Link to="/cart" aria-label="Cart" className="bite-cart-link"><ShoppingBag className="size-[18px]" /><span>Bag{count > 0 ? ` · ${count}` : ""}</span></Link>
-        {user ? <Button variant="ghost" size="icon" onClick={signOut} aria-label="Sign out" className="rounded-full"><LogOut className="size-[18px]" /></Button> : <Link to="/auth" className="bite-signin hidden sm:inline-flex">Sign in <ArrowUpRight className="size-4" /></Link>}
+        {user ? <><Link to="/customer-dashboard" aria-label="My account" className="bite-icon-link hidden sm:grid"><UserRound className="size-[18px]" /></Link><Button variant="ghost" size="icon" onClick={signOut} aria-label="Sign out" className="rounded-full"><LogOut className="size-[18px]" /></Button></> : <Link to="/auth" className="bite-signin hidden sm:inline-flex">Sign in <ArrowUpRight className="size-4" /></Link>}
         <Button variant="ghost" size="icon" className="rounded-full md:hidden" onClick={() => setOpen(v => !v)} aria-label={open ? "Close menu" : "Open menu"}>{open ? <X className="size-5" /> : <Menu className="size-5" />}</Button>
       </div>
     </div>
-    {open && <div className="bite-mobile-menu px-5 pb-4 pt-2 md:hidden"><div className="mx-auto max-w-[1440px] space-y-1">{NAV.map(item => <Link key={item.to} to={item.to} onClick={() => setOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-bold">{item.label}<ArrowRight className="size-4" /></Link>)}{isStaff && <Link to="/staff" onClick={() => setOpen(false)} className="flex px-4 py-3 text-sm font-bold">Kitchen console</Link>}{!user && <Link to="/auth" onClick={() => setOpen(false)} className="flex items-center justify-between rounded-xl bg-[#c9f36b] px-4 py-3 text-sm font-black">Sign in <ArrowUpRight className="size-4" /></Link>}</div></div>}
+    {open && <div className="bite-mobile-menu px-5 pb-4 pt-2 md:hidden"><div className="mx-auto max-w-[1440px] space-y-1">{NAV.map(item => <Link key={item.to} to={item.to} onClick={() => setOpen(false)} className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-bold">{item.label}<ArrowRight className="size-4" /></Link>)}{isStaff && <Link to="/store-dashboard" onClick={() => setOpen(false)} className="flex px-4 py-3 text-sm font-bold">Store control</Link>}{!user && <Link to="/auth" onClick={() => setOpen(false)} className="flex items-center justify-between rounded-xl bg-[#c9f36b] px-4 py-3 text-sm font-black">Sign in <ArrowUpRight className="size-4" /></Link>}</div></div>}
   </header>;
 }
