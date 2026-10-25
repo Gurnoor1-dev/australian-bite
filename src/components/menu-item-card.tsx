@@ -37,7 +37,7 @@ export function MenuItemCard({ item, saved, onToggleSave }: { item: MenuItem; sa
   const [addons, setAddons] = useState<{id:string;name:string;description:string|null;price:number}[]>([]);
   const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
   const [addonsLoading, setAddonsLoading] = useState(false);
-  useEffect(() => { if (!addonsOpen) return; let live = true; setAddonsLoading(true); supabase.from("add_on_options").select("id,name,description,price").eq("is_available",true).order("sort_order").then(({data,error}) => { if (!live) return; if (error) toast.error("Could not load extras"); setAddons((data ?? []).map((x:any)=>({...x,price:Number(x.price)}))); setAddonsLoading(false); }); return () => { live = false; }; }, [addonsOpen]);
+  useEffect(() => { if (!addonsOpen) return; let live = true; setAddonsLoading(true); supabase.from("add_on_options").select("id,name,description,price,category_id").eq("is_available",true).or(`category_id.is.null,category_id.eq.${item.category_id}`).order("sort_order").then(({data,error}) => { if (!live) return; if (error) toast.error("Could not load extras"); setAddons((data ?? []).map((x:any)=>({...x,price:Number(x.price)}))); setAddonsLoading(false); }); return () => { live = false; }; }, [addonsOpen]);
   const selected = options.find((option) => option.id === selectedId) ?? options[0];
   const hasSizeChoice = options.length > 1;
   const dietaryType = selected.item_type ?? item.item_type ?? (item.is_vegetarian ? "Veg" : "Non-Veg");
