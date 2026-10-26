@@ -106,7 +106,7 @@ function MenuPage() {
             }}><span>{target ? "Find the dish & unlock" : "Save offer for checkout"}</span><ArrowRight className="size-4 transition-transform group-hover:translate-x-1" /></button>
           </article>;
         })}</div>
-      </section>
+      </section>}
       <div className="bite-filter-bar">
         <div className="bite-category-scroll"><CategoryChip active={activeCategory === "all"} onClick={() => setActiveCategory("all")} label="Everything" />{(data?.categories ?? []).map((category) => <CategoryChip key={category.id} active={activeCategory === category.id} onClick={() => setActiveCategory(category.id)} label={category.name} />)}</div>
         <div className="bite-type-filters" aria-label="Filter by food type"><button type="button" className={foodType === "all" ? "active" : ""} onClick={() => setFoodType("all")}>All</button><button type="button" className={foodType === "Veg" ? "active" : ""} onClick={() => setFoodType("Veg")}>Veg</button><button type="button" className={foodType === "Non-Veg" ? "active" : ""} onClick={() => setFoodType("Non-Veg")}>Non-veg</button></div>
