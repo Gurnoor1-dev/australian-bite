@@ -1,24 +1,40 @@
 # Australian Bite Hub
 
-Create a Website for a restaurant named Australian Bite, make it like Mcdonald and all other worldwide level of Companies. So it will have everything, ordering, wishlist, order history, order cancellation, support, Scheduling and from one end the person will order or have support and at other end from a Desktop windows app that will be linked to our database will either accept the order, either they'll call the person or either they'll decline the order with a reason or without a reason. Also use Supabase as backend database and Vercel would be used. Support will have chat to a person or call to a number.
+A restaurant ordering and operations web application built with TanStack Start, React, Vite and TypeScript.
 
-This project was built with [Lovable](https://lovable.dev).
+## Requirements
+- Node.js 20 or newer recommended
+- npm
 
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/7db6c668-c9ec-4299-922c-f9cfdbfa1e5f).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+## Run locally
+```bash
+git clone https://github.com/Gurnoor1-dev/australian-bite.git
+cd australian-bite
+npm install
 npm run dev
 ```
+
+Open the local URL printed by the terminal. Configure the required database, authentication, payment, and service URLs using local environment variables as referenced by the code. Never commit real credentials.
+
+## Build and preview
+```bash
+npm run build
+npm run preview
+```
+
+## Deploy from a terminal
+```bash
+npm install -g vercel
+vercel
+vercel --prod
+```
+
+## Deploy on Vercel
+1. Import this repository into Vercel.
+2. Confirm the TanStack Start framework and build settings are detected correctly.
+3. Set the install command to `npm install` and build command to `npm run build` unless the project configuration requires different values.
+4. Add all production environment variables in Vercel Project Settings.
+5. Deploy a preview and test checkout, order creation, authentication, and staff workflows before promoting to production.
+
+## Payments and security
+Only use provider-approved server-side payment integrations. Do not put payment secrets or service-role keys in browser code or commit them to Git.
