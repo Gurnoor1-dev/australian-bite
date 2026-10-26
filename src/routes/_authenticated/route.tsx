@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async ({ location }) => {
+    // Checkout is public; do not block its route on an auth/session lookup.
+    if (location.pathname === "/checkout") return {};
     const { data, error } = await supabase.auth.getUser();
     // Let visitors open checkout and review their bag before signing in.
     // Placing an order still requires an authenticated account.
