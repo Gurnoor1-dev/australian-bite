@@ -45,12 +45,12 @@ function Home() {
   }});
 
   return <main className="bite-home overflow-hidden">
-    <section className="bite-hero">
+    <section className="bite-hero" aria-labelledby="bite-home-headline">
       <div className="bite-hero-noise" />
       <div className="mx-auto grid max-w-[1440px] items-center gap-8 px-5 pb-14 pt-10 sm:px-8 sm:pb-20 lg:grid-cols-[.94fr_1.06fr] lg:px-12 lg:pb-24 lg:pt-14">
         <div className="relative z-10 py-5 lg:py-12">
           <div className="bite-eyebrow"><img src={logo} alt="" className="bite-hero-logo" width="30" height="30" decoding="async" /><span className="bite-pulse" /> PEHOWA, COME HUNGRY. <span className="ml-1">PIZZA · CURRIES · MORE</span></div>
-          <h1 className="bite-headline mt-7">BITE<br /><span>INTO</span><br /><em>HAPPY.</em></h1>
+          <h1 id="bite-home-headline" className="bite-headline mt-7">BITE<br /><span>INTO</span><br /><em>HAPPY.</em></h1>
           <p className="mt-6 max-w-md text-base leading-7 text-white/65 sm:text-lg">From oven-hot pizzas and comforting curries to biryani, shakes and crispy sides — find the food you came for, with prices that are easy to love.</p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link to="/menu"><Button className="bite-cta h-14 rounded-full px-7 text-sm font-black">Explore the menu <ArrowUpRight className="ml-2 size-4" /></Button></Link>
