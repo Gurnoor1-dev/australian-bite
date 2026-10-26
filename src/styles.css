@@ -469,3 +469,103 @@
 :where(.bg-card, .bg-background, .bg-white, .bg-secondary) .bite-trust-icon {
   color: #46552b;
 }
+
+
+/* Australian Bite premium motion system — storefront, customer account and staff consoles. */
+@keyframes bite-rise-in {
+  from { opacity: 0; transform: translate3d(0, 22px, 0) scale(.99); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes bite-soft-glow {
+  0%,100% { box-shadow: 0 0 0 0 rgb(201 243 107 / 0%); }
+  50% { box-shadow: 0 0 0 8px rgb(201 243 107 / 8%); }
+}
+@keyframes bite-drift {
+  0%,100% { transform: translateY(0) rotate(2deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+@keyframes bite-orbit {
+  from { transform: rotate(-13deg); }
+  to { transform: rotate(347deg); }
+}
+.bite-hero .bite-eyebrow { animation: bite-rise-in .65s .05s both cubic-bezier(.2,.8,.2,1); }
+.bite-hero .bite-headline { animation: bite-rise-in .8s .12s both cubic-bezier(.2,.8,.2,1); }
+.bite-hero .bite-visual-wrap { animation: bite-rise-in .85s .18s both cubic-bezier(.2,.8,.2,1); }
+.bite-image-main { animation: bite-drift 8s ease-in-out 1.2s infinite; }
+.bite-stamp { animation: bite-rise-in .7s .45s both cubic-bezier(.2,.8,.2,1); }
+.bite-pulse { animation: bite-soft-glow 2.4s ease-in-out infinite; }
+.bite-hero-noise { background-position: 0 0; animation: bite-noise-drift 24s linear infinite; }
+@keyframes bite-noise-drift { to { background-position: 120px 80px; } }
+.bite-marquee:hover div { animation-play-state: paused; }
+.bite-feature-card { transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease; }
+.bite-feature-card:hover { transform: translateY(-7px); box-shadow: 0 24px 50px rgb(23 26 21 / 18%); }
+.bite-feature-arrow { transition: transform .25s ease, background .25s ease; }
+.bite-feature-card:hover .bite-feature-arrow { transform: rotate(45deg); background: #c9f36b; }
+.bite-product-card { transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease, border-color .28s ease; }
+.bite-product-card:hover { transform: translateY(-5px); box-shadow: 0 24px 52px -30px rgb(23 26 21 / 45%); border-color: rgb(140 174 66 / 55%); }
+.bite-product-brand, .bite-product-diet, .bite-product-save { transition: transform .22s ease, background .22s ease, color .22s ease; }
+.bite-product-save:hover { transform: scale(1.08); }
+.bite-category-chip { transition: background .2s ease, color .2s ease, transform .2s ease, border-color .2s ease; }
+.bite-category-chip:hover { transform: translateY(-2px); }
+.bite-type-filters button, .bite-nav-link, .bite-icon-link, .bite-cart-link, .bite-signin { transition: color .2s ease, background .2s ease, transform .2s ease, border-color .2s ease; }
+.bite-nav-link:hover { transform: translateY(-1px); }
+.bite-brand-logo { transition: transform .3s ease; }
+.bite-brand:hover .bite-brand-logo { transform: scale(1.035); }
+.bite-cart-count { animation: bite-rise-in .28s both cubic-bezier(.2,.8,.2,1); }
+
+/* Shared dashboard polish. This only changes presentation, not data or permissions. */
+.site-shell > div > section,
+.site-shell article,
+.site-shell [class*="rounded-2xl"][class*="border"][class*="bg-card"] {
+  transition: border-color .24s ease, box-shadow .24s ease, transform .24s ease;
+}
+.site-shell article:hover,
+.site-shell [class*="rounded-2xl"][class*="border"][class*="bg-card"]:hover {
+  border-color: rgb(140 174 66 / 42%);
+  box-shadow: 0 16px 38px -28px rgb(23 26 21 / 45%);
+}
+.site-shell button:not(:disabled),
+.site-shell a[class*="rounded-"] {
+  transition: transform .18s ease, box-shadow .2s ease, background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+.site-shell button:not(:disabled):active,
+.site-shell a[class*="rounded-"]:active { transform: scale(.985); }
+.site-shell input:focus-visible,
+.site-shell textarea:focus-visible,
+.site-shell select:focus-visible {
+  outline: 2px solid #8cae42;
+  outline-offset: 2px;
+}
+.site-shell main, main.site-shell { animation: bite-rise-in .42s ease-out both; }
+.bite-menu-hero { position: relative; isolation: isolate; }
+.bite-menu-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 28rem;
+  height: 28rem;
+  right: -9rem;
+  top: -12rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(201 243 107 / 12%), transparent 68%);
+  pointer-events: none;
+}
+.bite-menu-photo img { transition: transform .7s cubic-bezier(.2,.7,.2,1); }
+.bite-menu-photo:hover img { transform: scale(1.045) rotate(-1deg); }
+.bite-menu-search { transition: border-color .25s ease, box-shadow .25s ease; }
+.bite-menu-search:focus-within { box-shadow: 0 0 0 3px rgb(201 243 107 / 13%); }
+.bite-trust-item { transition: transform .22s ease, border-color .22s ease; }
+.bite-trust-item:hover { transform: translateY(-3px); }
+.bite-steps .bite-step { transition: padding .22s ease, background .22s ease; }
+.bite-steps .bite-step:hover { padding-inline: .8rem; background: rgb(232 234 219 / 65%); }
+
+@media (prefers-reduced-motion: reduce) {
+  .bite-hero .bite-eyebrow, .bite-hero .bite-headline, .bite-hero .bite-visual-wrap,
+  .bite-stamp, .bite-image-main, .bite-pulse, .bite-hero-noise, .bite-cart-count,
+  .site-shell main, main.site-shell { animation: none !important; }
+  .bite-feature-card, .bite-feature-card img, .bite-product-card, .bite-product-brand,
+  .bite-product-diet, .bite-product-save, .bite-category-chip, .bite-type-filters button,
+  .bite-nav-link, .bite-icon-link, .bite-cart-link, .bite-signin, .bite-brand-logo,
+  .site-shell article, .site-shell button, .site-shell a, .bite-trust-item,
+  .bite-steps .bite-step { transition: none !important; transform: none !important; }
+}
