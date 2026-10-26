@@ -22,7 +22,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const signOut = async () => { await supabase.auth.signOut(); setOpen(false); navigate({ to: "/" }); };
 
-  return <header className="bite-header sticky top-0 z-50">
+  return <header className="bite-header sticky top-0 z-50" data-brand="australian-bite">
     <div className="bite-header-inner mx-auto flex h-[76px] max-w-[1440px] items-center gap-3 px-5 sm:px-8 lg:px-12">
       <Link to="/" aria-label="Australian Bite home" className="bite-brand" onClick={() => setOpen(false)}>
         <img src={logo} alt="Australian Bite" className="bite-brand-logo" />
