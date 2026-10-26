@@ -457,3 +457,15 @@
   body { font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
   h1, h2, h3 { font-family: "Outfit", ui-sans-serif, sans-serif; }
 }
+
+
+/* Contrast guard: lime is a brand accent, not an accessible icon color on pale surfaces. */
+:where(.bg-card, .bg-background, .bg-white, .bg-secondary, .bite-cart-summary, .bite-trust-item, .bite-product-card) .text-primary {
+  color: #526b25 !important;
+}
+:where(.bg-card, .bg-background, .bg-white, .bg-secondary, .bite-cart-summary, .bite-trust-item, .bite-product-card) svg.text-primary {
+  color: #526b25 !important;
+}
+:where(.bg-card, .bg-background, .bg-white, .bg-secondary) .bite-trust-icon {
+  color: #46552b;
+}
