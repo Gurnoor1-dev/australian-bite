@@ -569,3 +569,20 @@
   .site-shell article, .site-shell button, .site-shell a, .bite-trust-item,
   .bite-steps .bite-step { transition: none !important; transform: none !important; }
 }
+
+
+/* Offer studio + customer deal discovery */
+.bite-offers-section { animation: bite-rise-in .55s both cubic-bezier(.2,.8,.2,1); }
+.bite-offer-card { isolation: isolate; transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease, border-color .28s ease; }
+.bite-offer-card:hover { transform: translateY(-5px); border-color: rgb(140 174 66 / 55%); box-shadow: 0 24px 52px -30px rgb(23 26 21 / 45%); }
+.bite-offer-orb { position:absolute; z-index:-1; width:13rem; height:13rem; right:-5rem; top:-6rem; border-radius:999px; background:radial-gradient(circle, rgb(201 243 107 / 25%), transparent 70%); transition:transform .5s ease; }
+.bite-offer-card:hover .bite-offer-orb { transform:scale(1.25) translate(-.5rem,.5rem); }
+.bite-offer-card-1 .bite-offer-orb { background:radial-gradient(circle, rgb(242 138 101 / 20%), transparent 70%); }
+.bite-offer-card-2 .bite-offer-orb { background:radial-gradient(circle, rgb(201 243 107 / 25%), transparent 70%); }
+.bite-offer-cta { transition:background .2s ease, transform .2s ease; }
+.bite-offer-cta:hover { background:#526b25; transform:translateY(-1px); }
+.bite-offer-builder { background-image:radial-gradient(circle at 100% 0%, rgb(201 243 107 / 10%), transparent 35%); }
+@media (prefers-reduced-motion: reduce) {
+  .bite-offers-section { animation:none !important; }
+  .bite-offer-card, .bite-offer-orb, .bite-offer-cta { transition:none !important; transform:none !important; }
+}
