@@ -586,3 +586,8 @@
   .bite-offers-section { animation:none !important; }
   .bite-offer-card, .bite-offer-orb, .bite-offer-cta { transition:none !important; transform:none !important; }
 }
+
+
+/* Global Lucide icon contrast: avoid low-contrast lime glyphs on pale surfaces. */
+svg.text-primary, .text-primary > svg, [class*="text-primary"] > svg.text-primary { color: #47652a !important; stroke: currentColor; }
+.bg-primary svg, .bg-primary .text-primary, .bite-offer-card [class*="bg-[#c9f36b]"] svg { color: #171a15 !important; }
