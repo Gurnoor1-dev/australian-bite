@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { Activity, Banknote, Bell, Check, ChefHat, CircleAlert, ClipboardList, CreditCard, LogOut, Minus, PackageCheck, Plus, Printer, RefreshCw, Search, ShoppingBag, Store, Truck, Utensils, Wifi, WifiOff, X } from "lucide-react";
 import { supabase } from "./lib/supabase";
 import { listPrinters, printReceipt, type ReceiptPayload } from "./lib/printer";
@@ -35,7 +35,7 @@ export default function App(){
  useEffect(()=>{if(!session?.user?.id||roleError)return;const channel=supabase.channel("ab-store-pos-orders").on("postgres_changes",{event:"*",schema:"public",table:"orders"},()=>{void loadOrders();}).subscribe((s)=>setConnected(s==="SUBSCRIBED"));return()=>{void supabase.removeChannel(channel);};},[session?.user?.id,roleError,loadOrders]);
  useEffect(()=>{if(view==="printing")void refreshPrinters();},[view]);
  const refreshPrinters=async()=>{try{setPrinters(await listPrinters());}catch(e){flash(e instanceof Error?e.message:"Printer service unavailable","error");}};
- const signIn=async(e:React.FormEvent)=>{e.preventDefault();setBusy(true);const {error}=await supabase.auth.signInWithPassword({email:email.trim(),password});setBusy(false);if(error)flash(error.message,"error");else{setPassword("");flash("Signed in successfully");}};
+ const signIn=async(e:FormEvent)=>{e.preventDefault();setBusy(true);const {error}=await supabase.auth.signInWithPassword({email:email.trim(),password});setBusy(false);if(error)flash(error.message,"error");else{setPassword("");flash("Signed in successfully");}};
  const signOut=async()=>{await supabase.auth.signOut();setOrders([]);setMenu([]);setCart([]);};
  const changeStatus=async(o:Order,next:string)=>{setOrderBusy(o.id);const {error}=await supabase.rpc("set_order_status",{p_order_id:o.id,p_status:next,p_note:null});setOrderBusy("");if(error)flash(error.message,"error");else{flash(o.order_number+" · "+(statusName[next]||next));await loadOrders();}};
  const markReady=async(o:Order)=>{setOrderBusy(o.id);const {error}=await supabase.rpc("mark_order_ready",{p_order_id:o.id});setOrderBusy("");if(error)flash(error.message,"error");else{flash(o.fulfillment_type==="delivery"?"Driver requests sent":"Order ready for pickup");await loadOrders();}};
@@ -43,7 +43,7 @@ export default function App(){
  const updateQuantity=(id:string,d:number)=>setCart(cur=>cur.map(l=>l.item.id===id?{...l,quantity:l.quantity+d}:l).filter(l=>l.quantity>0));
  const toggleAddon=(itemId:string,addonId:string)=>setCart(cur=>cur.map(l=>l.item.id!==itemId?l:{...l,addon_ids:l.addon_ids.includes(addonId)?l.addon_ids.filter(x=>x!==addonId):[...l.addon_ids,addonId]}));
  const cartTotal=useMemo(()=>cart.reduce((sum,l)=>sum+(Number(l.item.price)+addons.filter(a=>l.addon_ids.includes(a.id)).reduce((n,a)=>n+Number(a.price),0))*l.quantity,0),[cart,addons]);
- const createCounterOrder=async(e:React.FormEvent)=>{e.preventDefault();if(!cart.length){flash("Add at least one item","error");return;}if(!customerName.trim()||!customerPhone.trim()){flash("Enter customer name and phone","error");return;}if(fulfillment==="delivery"&&(!address.trim()||!/^\\d{6}$/.test(postalCode))){flash("Enter delivery address and a valid 6-digit PIN code","error");return;}
+ const createCounterOrder=async(e:FormEvent)=>{e.preventDefault();if(!cart.length){flash("Add at least one item","error");return;}if(!customerName.trim()||!customerPhone.trim()){flash("Enter customer name and phone","error");return;}if(fulfillment==="delivery"&&(!address.trim()||!/^\\d{6}$/.test(postalCode))){flash("Enter delivery address and a valid 6-digit PIN code","error");return;}
   setBusy(true);const requestKey=crypto.randomUUID();const {data:orderId,error}=await supabase.rpc("place_counter_order",{p_items:cart.map(l=>({menu_item_id:l.item.id,quantity:l.quantity,addon_ids:l.addon_ids})),p_contact_name:customerName.trim(),p_contact_phone:customerPhone.trim(),p_fulfillment_type:fulfillment,p_address:fulfillment==="delivery"?address.trim():null,p_notes:null,p_payment_method:payment,p_scheduled_for:null,p_promo_code:coupon.trim()||null,p_request_key:requestKey,p_postal_code:fulfillment==="delivery"?postalCode:null});setBusy(false);
   if(error||!orderId){flash(error?.message||"Could not create counter order","error");return;}
   const {data:saved,error:savedErr}=await supabase.from("orders").select("*,order_items(*,order_item_addons(*))").eq("id",orderId).single();
@@ -84,8 +84,8 @@ export default function App(){
  async function printTestReceipt(){if(!selectedPrinter)return;const sample:ReceiptPayload={order_number:"AB-TEST0001",created_at:time(new Date().toISOString()),customer_name:"Australian Bite Test",customer_phone:"+91 74043 39777",fulfillment_type:"PICKUP",payment_method:"TEST PRINT",payment_status:"NOT A PAYMENT",items:[{name:"Thermal printer test",quantity:1,unit_price:1,line_total:1}],subtotal:1,discount:0,delivery_fee:0,total:1,notes:"Test only - no order created"};try{await printReceipt(selectedPrinter,sample);flash("Test receipt sent to printer");}catch(e){flash(e instanceof Error?e.message:"Test print failed","error");}}
 }
 
-function NavButton({active,icon,label,count,onClick}:{active:boolean;icon:React.ReactNode;label:string;count?:number;onClick:()=>void}){return <button className={active?"nav-button active":"nav-button"} onClick={onClick}><span>{icon}</span>{label}{count!==undefined&&<small>{count}</small>}</button>;}
-function Metric({icon,label,value,detail}:{icon:React.ReactNode;label:string;value:string;detail:string}){return <div className="metric-card"><span className="metric-icon">{icon}</span><div><small>{label}</small><strong>{value}</strong><em>{detail}</em></div></div>;}
+function NavButton({active,icon,label,count,onClick}:{active:boolean;icon:ReactNode;label:string;count?:number;onClick:()=>void}){return <button className={active?"nav-button active":"nav-button"} onClick={onClick}><span>{icon}</span>{label}{count!==undefined&&<small>{count}</small>}</button>;}
+function Metric({icon,label,value,detail}:{icon:ReactNode;label:string;value:string;detail:string}){return <div className="metric-card"><span className="metric-icon">{icon}</span><div><small>{label}</small><strong>{value}</strong><em>{detail}</em></div></div>;}
 function Empty({title,text}:{title:string;text:string}){return <div className="empty-state"><ShoppingBag size={28}/><b>{title}</b><span>{text}</span></div>;}
 function OrderCard({order:o,source,busy,printing,onStatus,onReady,onPrint}:{order:Order;source:string;busy:boolean;printing:boolean;onStatus:(o:Order,s:string)=>void;onReady:(o:Order)=>void;onPrint:(o:Order)=>void}){
  const next=o.status==="pending"?"accepted":o.status==="accepted"?"preparing":null;
