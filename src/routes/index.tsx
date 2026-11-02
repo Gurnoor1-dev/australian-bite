@@ -1,106 +1,23 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Clock3, Flame, Leaf, MapPin, Plus, Star, Truck } from "lucide-react";
-import { menuSupabase } from "@/integrations/supabase/menu-client";
-import { MenuItemCard, type MenuItem } from "@/components/menu-item-card";
-import { Reveal } from "@/components/reveal";
-import { Button } from "@/components/ui/button";
-import { currency, type Offer, STORE_HOURS } from "@/lib/format";
-import { useStoreSettings } from "@/hooks/useStoreSettings";
-import { db } from "@/lib/db";
+import {createFileRoute,Link} from "@tanstack/react-router";
+import {useQuery} from "@tanstack/react-query";
+import {ArrowRight,ArrowUpRight,Clock3,MapPin,Star,Truck} from "lucide-react";
+import {menuSupabase} from "@/integrations/supabase/menu-client";
+import {db} from "@/lib/db";
+import {MenuItemCard,type MenuItem} from "@/components/menu-item-card";
+import {Reveal} from "@/components/reveal";
+import {useStoreSettings} from "@/hooks/useStoreSettings";
+import {STORE_HOURS} from "@/lib/format";
 import logo from "@/assets/australian-bite-logo.png";
-
-const foodImage = "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1200&q=85";
-const friesImage = "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=900&q=85";
-const wingsImage = "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=900&q=85";
-
-export const Route = createFileRoute("/")({
-  head: () => ({ meta: [
-    { title: "Australian Bite | Pizzas, Curries & More in Pehowa" },
-    { name: "description", content: "Discover Australian Bite in Pehowa, Haryana: pizzas, Indian curries, biryani, shakes, wraps and sides. Explore our menu and call to order." },
-    { property: "og:title", content: "Australian Bite — Made for the hungry" },
-    { property: "og:description", content: "Pizzas, curries, biryani and more. Good food in Pehowa, Haryana." },
-    { property: "og:type", content: "website" },
-  ] }),
-  component: Home,
-});
-
-function Home() {
-  const { data: store } = useStoreSettings();
-  const openingHours = store?.opening_hours || STORE_HOURS;
-  const { data } = useQuery({ queryKey: ["featured-items"], queryFn: async () => {
-    const { data, error } = await menuSupabase.from("menu_items").select("id,name,variant,price,item_type,is_available,is_vegetarian,is_spicy,calories,category_id,description").eq("is_available", true).order("sort_order").limit(3);
-    if (error) throw error;
-    return data as unknown as MenuItem[];
-  }});
-  const { data: offers } = useQuery({ queryKey: ["home-offers"], queryFn: async () => {
-    const { data, error } = await db.from("offers").select("*").eq("is_active", true).limit(3);
-    if (error) throw error;
-    return (data ?? []) as Offer[];
-  }});
-  const { data: reviews } = useQuery({ queryKey: ["home-reviews"], queryFn: async () => {
-    const { data, error } = await db.from("order_reviews").select("id,rating,review_text,created_at").eq("is_published", true).order("created_at", { ascending: false }).limit(3);
-    if (error) throw error;
-    return data ?? [];
-  }});
-
-  return <main className="bite-home overflow-hidden">
-    <section className="bite-hero" aria-labelledby="bite-home-headline">
-      <div className="bite-hero-noise" />
-      <div className="mx-auto grid max-w-[1440px] items-center gap-8 px-5 pb-14 pt-10 sm:px-8 sm:pb-20 lg:grid-cols-[.94fr_1.06fr] lg:px-12 lg:pb-24 lg:pt-14">
-        <div className="relative z-10 py-5 lg:py-12">
-          <div className="bite-eyebrow"><img src={logo} alt="" className="bite-hero-logo" width="30" height="30" decoding="async" /><span className="bite-pulse" /> PEHOWA, COME HUNGRY. <span className="ml-1">PIZZA · CURRIES · MORE</span></div>
-          <h1 id="bite-home-headline" className="bite-headline mt-7">BITE<br /><span>INTO</span><br /><em>HAPPY.</em></h1>
-          <p className="mt-6 max-w-md text-base leading-7 text-white/65 sm:text-lg">From oven-hot pizzas and comforting curries to biryani, shakes and crispy sides — find the food you came for, with prices that are easy to love.</p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link to="/menu"><Button className="bite-cta h-14 rounded-full px-7 text-sm font-black">Explore the menu <ArrowUpRight className="ml-2 size-4" /></Button></Link>
-            <Link to="/menu" className="bite-text-link">I'm hungry already <ArrowDownRight className="size-4" /></Link>
-          </div>
-          <div className="mt-11 flex flex-wrap gap-x-6 gap-y-3 text-xs font-bold uppercase tracking-[.13em] text-white/45"><span className="inline-flex items-center gap-2"><Flame className="size-4 text-[#c9f36b]" /> Made fresh</span><span className="inline-flex items-center gap-2"><Truck className="size-4 text-[#c9f36b]" /> Pickup + delivery</span><span className="inline-flex items-center gap-2"><Leaf className="size-4 text-[#c9f36b]" /> Good ingredients</span></div>
-        </div>
-        <div className="bite-visual-wrap">
-          <div className="bite-stamp"><span>GOOD<br />MOOD</span><Star className="size-5 fill-current" /><span>FOOD</span></div>
-          <div className="bite-image-main"><img src={foodImage} alt="Freshly baked pizza with bubbling cheese" fetchPriority="high" decoding="async" /><div className="bite-image-shade" /></div>
-          <div className="bite-float-card"><span className="bite-card-kicker">THE CROWD PLEASER</span><strong>Cheesy.<br />Fresh. Yours.</strong><Link to="/menu" aria-label="Explore our menu"><ArrowUpRight className="size-5" /></Link></div>
-          <div className="bite-side-note">FRESH FROM<br />THE KITCHEN <span>↗</span></div>
-          <div className="bite-vertical-label">AUSTRALIAN BITE · YOUR NEW LOCAL</div>
-        </div>
-      </div>
-      <div className="bite-marquee" aria-label="Australian Bite food slogan"><div>BIG FLAVOUR <span>✳</span> NO BORING BITES <span>✳</span> GOOD MOOD FOOD <span>✳</span> BIG FLAVOUR <span>✳</span> NO BORING BITES <span>✳</span></div></div>
-    </section>
-
-    <section className="bite-trust-strip mx-auto grid max-w-[1440px] gap-3 px-5 py-5 sm:grid-cols-3 sm:px-8 lg:px-12" aria-label="Ordering benefits">
-      <div className="bite-trust-item"><span className="bite-trust-icon"><Flame className="size-4" /></span><span><strong>Made for your cravings</strong><small>Freshly prepared favourites</small></span></div>
-      <div className="bite-trust-item"><span className="bite-trust-icon"><Truck className="size-4" /></span><span><strong>Pickup or delivery</strong><small>Choose what works for you</small></span></div>
-      <div className="bite-trust-item"><span className="bite-trust-icon"><Clock3 className="size-4" /></span><span><strong>Order updates</strong><small>Follow your order status online</small></span></div>
-    </section>
-
-    {(offers ?? []).length > 0 && <section className="mx-auto max-w-[1440px] px-5 pt-12 sm:px-8 lg:px-12"><div className="bite-section-top"><div><span className="bite-kicker">A little something extra</span><h2 className="bite-section-title">GOOD DEALS.<br /><i>GREAT DAYS.</i></h2></div><span className="bite-counter">01 / OFFERS</span></div><div className="mt-7 grid gap-4 md:grid-cols-3">{offers!.map((offer, i) => <Reveal key={offer.id} delay={i * 70}><article className="bite-offer-card"><span className="bite-offer-number">0{i + 1}</span><p className="bite-offer-code">{offer.code}</p><h3>{offer.title}</h3><p className="mt-2 text-sm leading-6 text-white/60">{offer.description}</p></article></Reveal>)}</div></section>}
-
-    <section className="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
-      <div className="bite-section-top"><div><span className="bite-kicker">Worth getting your hands messy for</span><h2 className="bite-section-title">THE <i>GOOD</i><br />STUFF.</h2><p className="mt-4 max-w-md text-sm leading-6 text-[#686b62] sm:text-base">Pizza, paneer, biryani, wraps, shakes and sides — all in one place.</p></div><Link to="/menu" className="bite-round-link">FULL MENU <ArrowUpRight className="size-5" /></Link></div>
-      <div className="bite-feature-strip mt-10">
-        <Link to="/menu" className="bite-feature-card bite-feature-burger"><img src={foodImage} alt="Signature burger" loading="lazy" decoding="async" /><div className="bite-feature-overlay" /><span className="bite-feature-index">01 — THE ICON</span><div className="bite-feature-bottom"><div><h3>THE<br />STACK.</h3><p>Hot, cheesy, made your way.</p></div><span className="bite-feature-arrow"><ArrowUpRight className="size-5" /></span></div></Link>
-        <Link to="/menu" className="bite-feature-card bite-feature-fries"><img src={friesImage} alt="Golden crispy fries" loading="lazy" decoding="async" /><div className="bite-feature-overlay" /><span className="bite-feature-index">02 — THE SIDEKICK</span><div className="bite-feature-bottom"><div><h3>GOLDEN<br />HOUR.</h3><p>Comfort food, full of flavour.</p></div><span className="bite-feature-arrow"><ArrowUpRight className="size-5" /></span></div></Link>
-        <Link to="/menu" className="bite-feature-card bite-feature-wings"><img src={wingsImage} alt="Crispy glazed chicken wings" loading="lazy" decoding="async" /><div className="bite-feature-overlay" /><span className="bite-feature-index">03 — THE SAUCY ONE</span><div className="bite-feature-bottom"><div><h3>WING<br />THING.</h3><p>A cool sip makes it better.</p></div><span className="bite-feature-arrow"><ArrowUpRight className="size-5" /></span></div></Link>
-      </div>
-    </section>
-
-    <section className="bite-menu-section">
-      <div className="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12">
-        <div className="bite-section-top"><div><span className="bite-kicker">Straight from our kitchen</span><h2 className="bite-section-title">FAN<br /><i>FAVOURITES.</i></h2></div><span className="bite-counter">02 / THE MENU</span></div>
-        {(data ?? []).length ? <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{data!.map((item, i) => <Reveal key={item.id} delay={i * 70}><MenuItemCard item={item} /></Reveal>)}</div> : <div className="bite-empty-menu mt-9"><div><span className="bite-kicker">Your next favourite is waiting</span><h3>Something delicious<br />is on the menu.</h3><p>Explore the full lineup and find your kind of bite.</p></div><Link to="/menu" className="bite-cta inline-flex items-center rounded-full px-6 py-4 text-sm font-black">See the menu <ArrowRight className="ml-2 size-4" /></Link></div>}
-        <div className="mt-8 flex justify-center"><Link to="/menu" className="bite-outline-cta">See everything on the menu <ArrowRight className="size-4" /></Link></div>
-      </div>
-    </section>
-
-    <section className="mx-auto grid max-w-[1440px] gap-10 px-5 py-16 sm:px-8 md:grid-cols-[.85fr_1.15fr] md:items-center lg:px-12 lg:py-24">
-      <div><span className="bite-kicker">Good food, on your schedule</span><h2 className="bite-section-title mt-4">YOU BRING<br />THE <i>HUNGER.</i></h2><p className="mt-5 max-w-md text-sm leading-7 text-[#686b62] sm:text-base">Dine on your time. Build your order, pick it up or get it delivered, and keep every detail in one place.</p><Link to="/menu" className="bite-dark-cta mt-7 inline-flex items-center rounded-full px-6 py-4 text-sm font-black">Let's get eating <ArrowRight className="ml-2 size-4" /></Link></div>
-      <div className="bite-steps"><div className="bite-step"><span>01</span><div><h3>Pick your favourites</h3><p>Explore the menu and make it yours.</p></div><Plus className="size-5" /></div><div className="bite-step"><span>02</span><div><h3>Choose your timing</h3><p>Pickup, delivery or schedule it ahead.</p></div><Clock3 className="size-5" /></div><div className="bite-step"><span>03</span><div><h3>Good things are coming</h3><p>Track your order and get ready to dig in.</p></div><MapPin className="size-5" /></div><div className="bite-step-note"><span>THE BEST PART?</span><strong>You’re only a few taps away.</strong></div></div>
-    </section>
-    {(reviews ?? []).length > 0 && <section className="mx-auto max-w-[1440px] px-5 py-14 sm:px-8 lg:px-12"><div className="bite-section-top"><div><span className="bite-kicker">Straight from the table</span><h2 className="bite-section-title">GOOD WORDS.<br /><i>REAL BITES.</i></h2></div><span className="bite-counter">VERIFIED REVIEWS</span></div><div className="mt-7 grid gap-4 md:grid-cols-3">{reviews!.map((review:any,i:number)=><Reveal key={review.id} delay={i*70}><article className="rounded-[24px] border border-black/10 bg-white/70 p-6 shadow-sm"><div className="flex gap-1" aria-label={`${review.rating} out of 5 stars`}>{[1,2,3,4,5].map(n=><Star key={n} className={`size-4 ${n<=review.rating?"fill-current text-[#d86a3b]":"text-black/15"}`}/>)}</div><p className="mt-4 min-h-12 text-sm leading-6 text-[#56594f]">{review.review_text || "A customer rated their meal."}</p><div className="mt-5 border-t border-black/10 pt-4"><p className="text-xs font-black uppercase tracking-wider text-[#30342b]">Verified customer</p><p className="mt-1 text-xs text-[#77796e]">Verified purchase · {new Date(review.created_at).toLocaleDateString("en-IN")}</p></div></article></Reveal>)}</div></section>}
-
-    <section className="bite-last-call"><div className="mx-auto flex max-w-[1440px] flex-col gap-7 px-5 py-14 sm:px-8 md:flex-row md:items-end md:justify-between lg:px-12 lg:py-20"><div><span className="bite-kicker">Your stomach called</span><h2>IT SAID<br /><i>“LET'S BITE.”</i></h2></div><Link to="/menu" className="bite-cta inline-flex w-fit items-center rounded-full px-7 py-4 text-sm font-black">Order your happy <ArrowUpRight className="ml-2 size-4" /></Link></div></section>
-    <div className="mx-auto max-w-[1440px] px-5 pb-6 text-xs text-[#77796e] sm:px-8 lg:px-12"><div className="flex flex-wrap items-center justify-between gap-3 border-t border-black/10 pt-5"><span>GOOD FOOD. GOOD MOOD. AUSTRALIAN BITE.</span><span>Pehowa, Haryana · {openingHours} · {store?.festival_pricing_note || "Prices may vary during festivals."}</span></div></div>
-  </main>;
+export const Route=createFileRoute("/")({head:()=>({meta:[{title:"Australian Bite | Pehowa, Haryana"},{name:"description",content:"Order pizzas, Indian favourites, biryani, wraps and more from Australian Bite in Pehowa."}]}),component:Home});
+function Home(){
+ const {data:store}=useStoreSettings();
+ const menu=useQuery({queryKey:["home-featured-v2"],queryFn:async()=>{const r=await menuSupabase.from("menu_items").select("id,name,variant,price,item_type,is_available,is_vegetarian,is_spicy,calories,category_id,description").eq("is_available",true).order("sort_order").limit(6);if(r.error)throw r.error;return r.data as unknown as MenuItem[]}});
+ const offers=useQuery({queryKey:["home-offers-v2"],queryFn:async()=>{const r=await db.from("offers").select("*").eq("is_active",true).limit(3);if(r.error)throw r.error;return r.data??[]}});
+ const reviews=useQuery({queryKey:["home-reviews-v2"],queryFn:async()=>{const r=await db.from("order_reviews").select("id,rating,review_text,created_at").eq("is_published",true).order("created_at",{ascending:false}).limit(3);if(r.error)throw r.error;return r.data??[]}});
+ return <main className="ab-storefront"><section className="ab-home-hero"><div className="ab-home-copy"><div className="ab-brand-line"><img src={logo} alt="Australian Bite" width="42" height="42"/><span>PEHOWA · HARYANA</span></div><p className="ab-overline">Good food. No fuss.</p><h1>Made for<br/><em>the moment.</em></h1><p className="ab-home-intro">From oven-hot pizzas to familiar Indian favourites, find something worth slowing down for.</p><div className="mt-8 flex flex-wrap items-center gap-3"><Link to="/menu" className="ab-button">Explore the menu <ArrowUpRight className="ml-2 size-4"/></Link><a href="tel:+917404339777" className="ab-link">Call the restaurant <ArrowRight className="ml-2 size-4"/></a></div><div className="ab-home-meta"><span><Clock3/> {store?.opening_hours||STORE_HOURS}</span><span><Truck/> Pickup & delivery</span></div></div><div className="ab-home-image"><img src="https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1400&q=88" alt="Freshly baked pizza ready to serve" fetchPriority="high"/><div className="ab-image-caption"><span>01 / FROM OUR KITCHEN</span><b>Made fresh.<br/>Served with care.</b></div></div></section><section className="ab-intro-band"><p>AUSTRALIAN BITE</p><span>PEHOWA'S EVERYDAY FOOD STOP</span><p>GOOD FOOD, GOOD COMPANY.</p></section>
+ {(offers.data??[]).length>0&&<section className="ab-section"><div className="ab-section-head"><div><p className="ab-overline">Worth a look</p><h2>Current offers</h2></div><Link to="/menu" className="ab-link">Browse deals <ArrowRight/></Link></div><div className="ab-offer-grid">{offers.data!.map((o:any,i:number)=><article key={o.id} className="ab-offer"><span>0{i+1} / OFFER</span><b>{o.title}</b><p>{o.description|| (o.discount_type==="bogo"?`Buy ${o.buy_quantity} and get ${o.free_quantity} free`:"A little extra off your order.")}</p><strong>{o.code}</strong></article>)}</div></section>}
+ <section className="ab-section ab-featured"><div className="ab-section-head"><div><p className="ab-overline">From the menu</p><h2>Good things<br/>to get into.</h2></div><p className="ab-section-note">A few favourites to get you started. The full menu has plenty more.</p></div>{menu.isLoading?<div className="ab-loading">Loading today's menu…</div>:<div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">{(menu.data??[]).map((item,i)=><Reveal key={item.id} delay={i*45}><MenuItemCard item={item}/></Reveal>)}</div>}<div className="mt-9 flex justify-center"><Link to="/menu" className="ab-button ab-button-dark">See the full menu <ArrowRight className="ml-2 size-4"/></Link></div></section>
+ <section className="ab-visit"><div><p className="ab-overline">Find your way here</p><h2>Good food,<br/><em>close to home.</em></h2><p>{store?.address||"Near NH-152, Kurukshetra Road, Pehowa, Haryana, India 136128"}</p></div><div className="ab-visit-aside"><span><MapPin/> Pehowa, Haryana</span><a href="tel:+917404339777">+91 74043 39777</a><Link to="/menu">Order online <ArrowUpRight/></Link></div></section>
+ {(reviews.data??[]).length>0&&<section className="ab-section"><div className="ab-section-head"><div><p className="ab-overline">From the table</p><h2>Good words.</h2></div></div><div className="grid gap-4 md:grid-cols-3">{reviews.data!.map((r:any)=><article key={r.id} className="ab-review"><div className="flex gap-1">{[1,2,3,4,5].map(n=><Star key={n} className={n<=r.rating?"fill-current text-[#b65c35]":"text-black/15"}/>)}</div><p>{r.review_text||"A customer rated their meal."}</p><span>Verified customer · {new Date(r.created_at).toLocaleDateString("en-IN")}</span></article>)}</div></section>}
+ <div className="ab-bottom-note"><img src={logo} alt="" width="34" height="34"/><span>Australian Bite · {store?.opening_hours||STORE_HOURS}</span><span>Pehowa, Haryana</span></div></main>
 }
