@@ -39,7 +39,7 @@ jobs:
         run: npm run build
 
       - name: Upload installer artifacts
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: australian-bite-store-pos-windows
           path: |
