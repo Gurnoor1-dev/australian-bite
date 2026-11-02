@@ -4,3 +4,6 @@ src-tauri/target/
 .env
 .env.*
 !.env.example
+
+src-tauri/icons/*
+!src-tauri/icons/icon.svg
