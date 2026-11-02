@@ -33,6 +33,8 @@ The Windows Rust command sends ESC/POS bytes directly to the selected Windows pr
 - Counter orders use the `place_counter_order` RPC, which checks Store/Admin role and delegates price, add-on, offer, and idempotency validation to the existing `place_order` database function.
 - Print attempts are recorded in `store_print_jobs`; print failures do not recreate or modify orders.
 
-## Notes
+## First-release scope
 
-This application requires an internet connection for authentication and order creation/updates. Offline order creation is intentionally not enabled in the first release.
+- Counter sales use the existing server-validated menu, add-on, delivery-fee, COD/prepaid, and order-idempotency rules.
+- Counter coupon/BOGO redemption is intentionally not enabled yet. The existing website redemption model is tied to authenticated customer accounts; the POS needs phone/guest-based redemption tracking before staff can safely apply those offers without consuming a redemption against the staff account. Website coupons and BOGO remain unchanged.
+- This application requires an internet connection for authentication and order creation/updates. Offline order creation is intentionally not enabled in the first release.
