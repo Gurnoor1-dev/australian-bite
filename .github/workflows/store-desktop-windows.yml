@@ -1,0 +1,49 @@
+name: Build Australian Bite Store POS
+
+on:
+  push:
+    branches:
+      - feature/store-desktop-pos
+    paths:
+      - "store-desktop/**"
+      - ".github/workflows/store-desktop-windows.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-installer:
+    name: Build Windows installer
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install desktop dependencies
+        working-directory: store-desktop
+        run: npm install
+
+      - name: Build Windows installers
+        working-directory: store-desktop
+        run: npm run build
+
+      - name: Upload installer artifacts
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
+        with:
+          name: australian-bite-store-pos-windows
+          path: |
+            store-desktop/src-tauri/target/release/bundle/msi/*.msi
+            store-desktop/src-tauri/target/release/bundle/nsis/*.exe
+          if-no-files-found: error
+          retention-days: 14
