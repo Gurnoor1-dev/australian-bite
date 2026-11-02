@@ -39,7 +39,7 @@ export default function App(){
  const signOut=async()=>{await supabase.auth.signOut();setOrders([]);setMenu([]);setCart([]);};
  const changeStatus=async(o:Order,next:string)=>{setOrderBusy(o.id);const {error}=await supabase.rpc("set_order_status",{p_order_id:o.id,p_status:next,p_note:null});setOrderBusy("");if(error)flash(error.message,"error");else{flash(o.order_number+" · "+(statusName[next]||next));await loadOrders();}};
  const markReady=async(o:Order)=>{setOrderBusy(o.id);const {error}=await supabase.rpc("mark_order_ready",{p_order_id:o.id});setOrderBusy("");if(error)flash(error.message,"error");else{flash(o.fulfillment_type==="delivery"?"Driver requests sent":"Order ready for pickup");await loadOrders();}};
- const addItem=(item:MenuItem)=>setCart(cur=>{const i=cur.findIndex(l=>l.item.id===item.id&&l.addon_ids.length===0);if(i<0)return [...cur,{item,quantity:1,addon_ids:[]}];return cur.map((l,n)=>n===i?{...l,quantity:l.quantity+1}:l);});
+ const addItem=(item:MenuItem)=>setCart(cur=>{const i=cur.findIndex(l=>l.item.id===item.id);if(i<0)return [...cur,{item,quantity:1,addon_ids:[]}];return cur.map((l,n)=>n===i?{...l,quantity:l.quantity+1}:l);});
  const updateQuantity=(id:string,d:number)=>setCart(cur=>cur.map(l=>l.item.id===id?{...l,quantity:l.quantity+d}:l).filter(l=>l.quantity>0));
  const toggleAddon=(itemId:string,addonId:string)=>setCart(cur=>cur.map(l=>l.item.id!==itemId?l:{...l,addon_ids:l.addon_ids.includes(addonId)?l.addon_ids.filter(x=>x!==addonId):[...l.addon_ids,addonId]}));
  const cartTotal=useMemo(()=>cart.reduce((sum,l)=>sum+(Number(l.item.price)+addons.filter(a=>l.addon_ids.includes(a.id)).reduce((n,a)=>n+Number(a.price),0))*l.quantity,0),[cart,addons]);
