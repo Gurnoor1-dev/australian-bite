@@ -12,6 +12,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: store-desktop-pos-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   windows-installer:
     name: Build Windows installer
