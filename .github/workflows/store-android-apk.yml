@@ -56,7 +56,7 @@ jobs:
         with:
           targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
       - name: Set release version
-        run: node scripts/set-pos-version.mjs "${{ inputs.release_tag }}"
+        run: node scripts/set-pos-version.mjs "${{ inputs.release_tag || 'store-v1.0.0' }}"
       - name: Install dependencies
         working-directory: store-desktop
         run: npm install
@@ -91,7 +91,7 @@ jobs:
       - name: Upload signed APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: australian-bite-pos-android-${{ inputs.release_tag }}
+          name: australian-bite-pos-android-${{ inputs.release_tag || 'store-v1.0.0' }}
           path: store-desktop/src-tauri/gen/android/app/build/outputs/apk/**/*.apk
           if-no-files-found: error
           retention-days: 14
