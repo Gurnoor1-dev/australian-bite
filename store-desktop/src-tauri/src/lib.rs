@@ -206,6 +206,11 @@ fn latest_github_release() -> Result<serde_json::Value, String> {
     let releases: Vec<serde_json::Value> = serde_json::from_str(&body)
         .map_err(|error| format!("GitHub returned an invalid release response: {error}"))?;
     releases.into_iter()
+        .filter(|release| {
+            release["draft"].as_bool() != Some(true)
+                && release["prerelease"].as_bool() != Some(true)
+                && release["tag_name"].as_str().map(|tag| tag.starts_with("store-v")).unwrap_or(false)
+        })
         .filter_map(|release| release_version(&release).ok().map(|version| (version, release)))
         .max_by(|left, right| left.0.cmp(&right.0))
         .map(|(_, release)| release)
