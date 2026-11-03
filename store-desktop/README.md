@@ -28,6 +28,7 @@ Sign in using an existing Australian Bite account with the `store` or `admin` ro
 - Thermal receipt printers use the Windows spooler RAW path and ESC/POS commands. Install the manufacturer's Windows driver, select the printer in **Printer settings**, and use **Print test receipt** before live service.
 - Microsoft Print to PDF and other PDF/document printers use a separate HTML print document (never RAW ESC/POS bytes). The PDF path uses a standard A4 page with the Australian Bite logo, so the resulting file is a normal, readable PDF. In the Windows print dialog choose **Microsoft Print to PDF**, then save the file.
 - The POS logo is used in the sign-in screen, sidebar, PDF receipts, and the Windows application icon.
+- Direct receipt-printer support in this release is Windows-only. Android order management and counter sales work, but Android Bluetooth/network receipt printing is not enabled yet.
 
 ## Windows and Android builds
 
