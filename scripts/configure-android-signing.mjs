@@ -4,8 +4,9 @@ const path = "store-desktop/src-tauri/gen/android/app/build.gradle.kts";
 let gradle = readFileSync(path, "utf8");
 
 if (!gradle.includes("import java.util.Properties")) {
-  gradle = "import java.util.Properties\nimport java.io.FileInputStream\n\n" + gradle;
+  gradle = "import java.util.Properties\n\n" + gradle;
 }
+gradle = gradle.replace(/^import java\\.io\\.FileInputStream\\s*\\n/m, "");
 
 if (!gradle.includes('create("release")')) {
   const signing = [
@@ -14,7 +15,7 @@ if (!gradle.includes('create("release")')) {
     '      val signingPropertiesFile = rootProject.file("keystore.properties")',
     "      val signingProperties = Properties()",
     "      if (signingPropertiesFile.exists()) {",
-    "        signingProperties.load(FileInputStream(signingPropertiesFile))",
+    "        signingProperties.load(signingPropertiesFile.inputStream())",
     "      }",
     '      keyAlias = signingProperties["keyAlias"] as String',
     '      keyPassword = signingProperties["password"] as String',
@@ -24,12 +25,12 @@ if (!gradle.includes('create("release")')) {
     "  }",
     ""
   ].join("\n");
-  if (!/buildTypes\s*\{/.test(gradle)) throw new Error("Could not find the Android release buildTypes block.");
-  gradle = gradle.replace(/buildTypes\s*\{/, signing + "\n  buildTypes {");
+  if (!/buildTypes\\s*\\{/.test(gradle)) throw new Error("Could not find the Android release buildTypes block.");
+  gradle = gradle.replace(/buildTypes\\s*\\{/, signing + "\n  buildTypes {");
 }
 
-if (!/signingConfig\s*=\s*signingConfigs\.getByName\("release"\)/.test(gradle)) {
-  const releaseBlock = /(getByName\("release"\)\s*\{)/;
+if (!/signingConfig\\s*=\\s*signingConfigs\\.getByName\\("release"\\)/.test(gradle)) {
+  const releaseBlock = /(getByName\\("release"\\)\\s*\\{)/;
   if (releaseBlock.test(gradle)) {
     gradle = gradle.replace(releaseBlock, '$1\n      signingConfig = signingConfigs.getByName("release")');
   } else {
