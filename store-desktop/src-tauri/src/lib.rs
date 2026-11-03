@@ -196,7 +196,7 @@ struct DesktopUpdate {
 }
 
 #[cfg(windows)]
-fn latest_github_release() -> Result<serde_json::Value, String> {
+fn latest_github_release(major_only: bool) -> Result<serde_json::Value, String> {
     let response = ureq::get("https://api.github.com/repos/Gurnoor1-dev/australian-bite/releases?per_page=50")
         .set("User-Agent", "Australian-Bite-Store-POS")
         .set("Accept", "application/vnd.github+json")
@@ -212,6 +212,7 @@ fn latest_github_release() -> Result<serde_json::Value, String> {
                 && release["tag_name"].as_str().map(|tag| tag.starts_with("store-v")).unwrap_or(false)
         })
         .filter_map(|release| release_version(&release).ok().map(|version| (version, release)))
+        .filter(|(version, _)| !major_only || (version.minor == 0 && version.patch == 0))
         .max_by(|left, right| left.0.cmp(&right.0))
         .map(|(_, release)| release)
         .ok_or_else(|| "No Australian Bite Store POS releases were found. POS release tags must start with store-v.".to_string())
@@ -228,7 +229,7 @@ fn release_version(release: &serde_json::Value) -> Result<semver::Version, Strin
 fn check_for_updates() -> Result<Option<DesktopUpdate>, String> {
     #[cfg(windows)]
     {
-        let release = latest_github_release()?;
+        let release = latest_github_release(false)?;
         let latest = release_version(&release)?;
         let current = semver::Version::parse(env!("CARGO_PKG_VERSION"))
             .map_err(|error| format!("The installed app version is invalid: {error}"))?;
@@ -267,7 +268,7 @@ fn install_latest_update(app: tauri::AppHandle) -> Result<(), String> {
         use sha2::{Digest, Sha256};
         use std::{fs, process::Command};
 
-        let release = latest_github_release()?;
+        let release = latest_github_release(true)?;
         let latest = release_version(&release)?;
         let current = semver::Version::parse(env!("CARGO_PKG_VERSION"))
             .map_err(|error| format!("The installed app version is invalid: {error}"))?;
