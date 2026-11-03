@@ -186,6 +186,10 @@ fn list_printers() -> Result<Vec<PrinterInfo>, String> {
 #[tauri::command]
 fn print_receipt(printer_name: String, receipt: ReceiptPayload) -> Result<u32, String> {
     if printer_name.trim().is_empty() { return Err("Choose a printer first.".into()); }
+    let virtual_queue = printer_name.to_lowercase();
+    if ["print to pdf", "xps", "onenote", "fax"].iter().any(|needle| virtual_queue.contains(needle)) {
+        return Err("This is a Windows virtual printer. Select Windows print dialog mode instead of Direct thermal (ESC/POS).".into());
+    }
     let bytes = build_receipt(&receipt);
     send_raw_to_printer(&printer_name, &bytes)
 }
