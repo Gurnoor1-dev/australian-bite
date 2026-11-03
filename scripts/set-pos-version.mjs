@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, appendFileSync } from "node:fs";
 
 const rawTag = process.argv[2] || process.env.GITHUB_REF_NAME || "";
-const match = rawTag.match(/^store-v(\\d+)\\.0\\.0$/);
+const match = rawTag.match(/^store-v(\d+)\.0\.0$/);
 if (!match) throw new Error("POS releases must be major tags such as store-v1.0.0 or store-v2.0.0.");
 
 const version = rawTag.replace(/^store-v/, "");
@@ -21,7 +21,7 @@ writeFileSync(configPath, JSON.stringify(config, null, 2) + "\n");
 
 const cargoPath = "store-desktop/src-tauri/Cargo.toml";
 let cargo = readFileSync(cargoPath, "utf8");
-cargo = cargo.replace(/(^\\[package\\][\\s\\S]*?^version = ")[^"]+(")/m, "$1" + version + "$2");
+cargo = cargo.replace(/(^\[package\][\s\S]*?^version = ")[^"]+(")/m, "$1" + version + "$2");
 writeFileSync(cargoPath, cargo);
 
 if (process.env.GITHUB_ENV) appendFileSync(process.env.GITHUB_ENV, "VITE_APP_VERSION=" + version + "\n");
