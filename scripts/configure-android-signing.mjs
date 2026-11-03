@@ -19,14 +19,14 @@ if (!gradle.includes('create("release")')) {
     }
   }
 `;
-  if (!/buildTypes\\s*\\{/.test(gradle)) throw new Error("Could not find the Android release buildTypes block.");
-  gradle = gradle.replace(/buildTypes\\s*\\{/, signing + "\\n  buildTypes {");
+  if (!/buildTypes\s*\{/.test(gradle)) throw new Error("Could not find the Android release buildTypes block.");
+  gradle = gradle.replace(/buildTypes\s*\{/, signing + "\n  buildTypes {");
 }
 
-if (!/signingConfig\\s*=\\s*signingConfigs\\.getByName\\("release"\\)/.test(gradle)) {
-  const releaseBlock = /(getByName\\("release"\\)\\s*\\{)/;
+if (!/signingConfig\s*=\s*signingConfigs\.getByName\("release"\)/.test(gradle)) {
+  const releaseBlock = /(getByName\("release"\)\s*\{)/;
   if (releaseBlock.test(gradle)) {
-    gradle = gradle.replace(releaseBlock, '$1\\n      signingConfig = signingConfigs.getByName("release")');
+    gradle = gradle.replace(releaseBlock, '$1\n      signingConfig = signingConfigs.getByName("release")');
   } else {
     throw new Error("Could not find the Android release build type to attach the persistent signing key.");
   }
