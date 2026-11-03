@@ -47,6 +47,19 @@ Sign in using an existing Australian Bite account with the `store` or `admin` ro
 
 Generate and back up the Android keystore once. Losing it prevents future APK updates over existing installations.
 
+Example key generation (keep the keystore file private and use the same password for the keystore and alias):
+
+```bash
+keytool -genkeypair -v -keystore australian-bite-pos.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias australian-bite-pos
+```
+
+Create the base64 value without uploading the keystore itself:
+
+- PowerShell: `[Convert]::ToBase64String([IO.File]::ReadAllBytes("australian-bite-pos.jks"))`
+- Linux/macOS: `base64 -w 0 australian-bite-pos.jks`
+
+In GitHub, open **Settings → Secrets and variables → Actions** and add the three repository secrets listed above. Do not paste the keystore, its passwords, or the base64 value into chat or commit them to Git.
+
 ## Android development
 
 - Install Android Studio, Android SDK/NDK, Java 17+, Node.js, and Rust.
