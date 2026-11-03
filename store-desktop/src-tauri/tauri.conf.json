@@ -15,7 +15,6 @@
         "title": "Australian Bite · Store POS",
         "width": 1440,
         "height": 900,
-        "minWidth": 1120,
         "minHeight": 720,
         "center": true,
         "resizable": true,
@@ -40,6 +39,9 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "android": {
+      "minSdkVersion": 24
+    }
   }
 }
