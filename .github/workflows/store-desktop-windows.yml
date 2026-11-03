@@ -112,6 +112,9 @@ jobs:
       - name: Install dependencies
         working-directory: store-desktop
         run: npm install
+      - name: Generate platform icons
+        working-directory: store-desktop
+        run: npm run icons
       - name: Initialize Tauri Android project
         working-directory: store-desktop
         run: npx tauri android init --ci
