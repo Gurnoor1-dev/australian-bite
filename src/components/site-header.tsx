@@ -17,7 +17,7 @@ const NAV = [
 
 export function SiteHeader() {
   const { count } = useCart();
-  const { user, isStaff, isAdmin } = useAuth();
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const signOut = async () => { await supabase.auth.signOut(); setOpen(false); navigate({ to: "/" }); };
@@ -29,7 +29,6 @@ export function SiteHeader() {
       </Link>
       <nav aria-label="Main navigation" className="bite-main-nav ml-5 hidden items-center gap-1 lg:ml-8 md:flex">
         {NAV.map(item => <Link key={item.to} to={item.to} className="bite-nav-link" activeProps={{ className: "bite-nav-link bite-nav-active" }} onClick={() => setOpen(false)}>{item.label}</Link>)}
-        {isStaff && <Link to="/store-dashboard" className="bite-nav-link">Store control</Link>}
         {isAdmin && <Link to="/admin-dashboard" className="bite-nav-link">Owner control</Link>}
       </nav>
       <div className="ml-auto flex items-center gap-1.5">
@@ -42,7 +41,6 @@ export function SiteHeader() {
     <div id="bite-mobile-navigation" className={`bite-mobile-panel md:hidden ${open ? "is-open" : ""}`} aria-hidden={!open} inert={!open}>
       <div className="mx-auto max-w-[1440px] space-y-1 px-5 pb-4 pt-2 sm:px-8">
         {NAV.map((item, index) => <Link key={item.to} to={item.to} onClick={() => setOpen(false)} style={{ "--nav-index": index } as CSSProperties} className="bite-mobile-link">{item.label}<ArrowRight className="size-4" /></Link>)}
-        {isStaff && <Link to="/store-dashboard" onClick={() => setOpen(false)} className="bite-mobile-link">Store control<ArrowRight className="size-4" /></Link>}
         {isAdmin && <Link to="/admin-dashboard" onClick={() => setOpen(false)} className="bite-mobile-link">Owner control<ArrowRight className="size-4" /></Link>}
         {!user && <Link to="/auth" onClick={() => setOpen(false)} className="bite-mobile-link bite-mobile-signin">Sign in <ArrowUpRight className="size-4" /></Link>}
       </div>
