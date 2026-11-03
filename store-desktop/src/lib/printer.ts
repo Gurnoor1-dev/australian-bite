@@ -47,7 +47,7 @@ export function isPdfPrinter(printerName: string): boolean {
  * Sending RAW receipt bytes to them produces a corrupt or empty PDF. Render a
  * real HTML receipt and let WebView2's native print pipeline create the PDF.
  */
-export async function printReceiptPreview(receipt: ReceiptPayload): Promise<void> {
+export async function printReceiptPreview(receipt: ReceiptPayload, logoUrl = ""): Promise<void> {
   const lineRows = receipt.items.map((item) => {
     const variant = item.variant && item.variant !== "Standard" ? ` <small>(${escapeHtml(item.variant)})</small>` : "";
     const addons = (item.addons || []).map((addon) => `<div class="addon">+ ${escapeHtml(addon)}</div>`).join("");
@@ -82,7 +82,7 @@ export async function printReceiptPreview(receipt: ReceiptPayload): Promise<void
       <div class="grand"><span>TOTAL</span><span>${escapeHtml(money(receipt.total))}</span></div>
     </div>${receipt.notes ? `<hr class="rule"><div><b>Notes:</b> ${escapeHtml(receipt.notes)}</div>` : ""}
     <div class="thanks">Thank you for ordering!</div><div class="foot">Order receipt — not a GST tax invoice</div>
-  </main><script>window.addEventListener("load",()=>{setTimeout(()=>window.print(),350)});</script></body></html>`;
+  </main></body></html>`;
   const frame = document.createElement("iframe");
   frame.setAttribute("aria-hidden", "true");
   frame.style.position = "fixed";
