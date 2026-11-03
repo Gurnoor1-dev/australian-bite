@@ -25,8 +25,16 @@ Sign in using an existing Australian Bite account with the `store` or `admin` ro
 
 ## Printing
 
-The Windows Rust command sends ESC/POS bytes directly to the selected Windows printer queue using the Windows spooler RAW datatype. No browser print preview is involved. The printer must support ESC/POS RAW jobs and have a Windows driver/queue installed. Test the printer and paper cut behaviour before using it for live service.
+- Thermal receipt printers use the Windows spooler RAW path and ESC/POS commands. Install the manufacturer's Windows driver, select the printer in **Printer settings**, and use **Print test receipt** before live service.
+- Microsoft Print to PDF and other PDF/document printers use a separate HTML print document (never RAW ESC/POS bytes). The PDF path uses a standard A4 page with the Australian Bite logo, so the resulting file is a normal, readable PDF. In the Windows print dialog choose **Microsoft Print to PDF**, then save the file.
+- The POS logo is used in the sign-in screen, sidebar, PDF receipts, and the Windows application icon.
 
+## Automatic updates
+
+- The app checks GitHub Releases at startup and every four hours while running.
+- Publish a Windows POS release with a tag in the format `store-v0.1.1` (increase the semantic version for each release). The Windows release workflow builds the installer and uploads its SHA-256 checksum beside it.
+- When a newer release is found, the POS displays an **Update** action. Choosing it downloads the installer, verifies its SHA-256 checksum, silently installs it, and restarts the POS. Local app settings remain in the app's normal Windows user-data directory.
+- The update checker only accepts newer semantic versions from this repository's latest GitHub Release.
 ## Order safety
 
 - Online orders are read from the existing `orders` table and updated only through existing validated status RPCs.

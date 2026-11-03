@@ -4,13 +4,15 @@ on:
   push:
     branches:
       - feature/store-desktop-pos
+    tags:
+      - "store-v*"
     paths:
       - "store-desktop/**"
       - ".github/workflows/store-desktop-windows.yml"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: store-desktop-pos-${{ github.ref }}
@@ -34,6 +36,26 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Set release version from tag
+        if: startsWith(github.ref, 'refs/tags/store-v')
+        shell: pwsh
+        working-directory: store-desktop
+        run: |
+          $version = $env:GITHUB_REF_NAME -replace '^store-v', ''
+          if ($version -notmatch '^\d+\.\d+\.\d+([+-][0-9A-Za-z.-]+)?$') { throw "Invalid release version: $version" }
+          $configPath = "src-tauri/tauri.conf.json"
+          $config = Get-Content $configPath -Raw | ConvertFrom-Json
+          $config.version = $version
+          $config | ConvertTo-Json -Depth 100 | Set-Content $configPath -Encoding utf8
+          $cargoPath = "src-tauri/Cargo.toml"
+          $cargo = Get-Content $cargoPath -Raw
+          $cargo = [regex]::Replace($cargo, '(?m)^version = "[^"]+"', "version = `"$version`"", 1)
+          Set-Content $cargoPath $cargo -Encoding utf8
+          $packagePath = "package.json"
+          $package = Get-Content $packagePath -Raw | ConvertFrom-Json
+          $package.version = $version
+          $package | ConvertTo-Json -Depth 100 | Set-Content $packagePath -Encoding utf8
+
       - name: Install desktop dependencies
         working-directory: store-desktop
         run: npm install
@@ -42,7 +64,28 @@ jobs:
         working-directory: store-desktop
         run: npm run build
 
+      - name: Create installer checksums
+        if: startsWith(github.ref, 'refs/tags/store-v')
+        shell: pwsh
+        run: |
+          $installers = Get-ChildItem "store-desktop/src-tauri/target/release/bundle/nsis" -Filter "*setup.exe"
+          if (-not $installers) { throw "The NSIS setup installer was not generated." }
+          foreach ($installer in $installers) {
+            $hash = (Get-FileHash $installer.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+            Set-Content -NoNewline "$($installer.FullName).sha256" "$hash  $($installer.Name)"
+          }
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/store-v')
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            store-desktop/src-tauri/target/release/bundle/nsis/*setup.exe
+            store-desktop/src-tauri/target/release/bundle/nsis/*setup.exe.sha256
+
       - name: Upload installer artifacts
+        if: startsWith(github.ref, 'refs/heads/feature/store-desktop-pos') || github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: australian-bite-store-pos-windows

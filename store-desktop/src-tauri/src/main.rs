@@ -190,9 +190,137 @@ fn print_receipt(printer_name: String, receipt: ReceiptPayload) -> Result<u32, S
     send_raw_to_printer(&printer_name, &bytes)
 }
 
+
+#[derive(Debug, Serialize)]
+struct DesktopUpdate {
+    version: String,
+    notes: String,
+}
+
+#[cfg(windows)]
+fn latest_github_release() -> Result<serde_json::Value, String> {
+    let response = ureq::get("https://api.github.com/repos/Gurnoor1-dev/australian-bite/releases?per_page=50")
+        .set("User-Agent", "Australian-Bite-Store-POS")
+        .set("Accept", "application/vnd.github+json")
+        .call()
+        .map_err(|error| format!("Could not check GitHub releases: {error}"))?;
+    let body = response.into_string().map_err(|error| format!("Could not read the GitHub release response: {error}"))?;
+    let releases: Vec<serde_json::Value> = serde_json::from_str(&body)
+        .map_err(|error| format!("GitHub returned an invalid release response: {error}"))?;
+    releases.into_iter()
+        .filter_map(|release| release_version(&release).ok().map(|version| (version, release)))
+        .max_by(|left, right| left.0.cmp(&right.0))
+        .map(|(_, release)| release)
+        .ok_or_else(|| "No Australian Bite Store POS releases were found. POS release tags must start with store-v.".to_string())
+}
+
+#[cfg(windows)]
+fn release_version(release: &serde_json::Value) -> Result<semver::Version, String> {
+    let tag = release["tag_name"].as_str().ok_or("The latest GitHub release has no tag.")?;
+    let version = tag.strip_prefix("store-v").or_else(|| tag.strip_prefix('v')).unwrap_or(tag);
+    semver::Version::parse(version).map_err(|_| format!("The release tag '{tag}' is not a valid POS version."))
+}
+
+#[tauri::command]
+fn check_for_updates() -> Result<Option<DesktopUpdate>, String> {
+    #[cfg(windows)]
+    {
+        let release = latest_github_release()?;
+        let latest = release_version(&release)?;
+        let current = semver::Version::parse(env!("CARGO_PKG_VERSION"))
+            .map_err(|error| format!("The installed app version is invalid: {error}"))?;
+        if latest > current {
+            return Ok(Some(DesktopUpdate {
+                version: latest.to_string(),
+                notes: release["body"].as_str().unwrap_or("").to_string(),
+            }));
+        }
+    }
+    Ok(None)
+}
+
+#[cfg(windows)]
+fn download_release_asset(url: &str) -> Result<Vec<u8>, String> {
+    use std::io::Read;
+    let mut response = ureq::get(url)
+        .set("User-Agent", "Australian-Bite-Store-POS")
+        .call()
+        .map_err(|error| format!("Could not download the POS update: {error}"))?;
+    let mut bytes = Vec::new();
+    response.into_reader().read_to_end(&mut bytes)
+        .map_err(|error| format!("Could not read the POS update download: {error}"))?;
+    Ok(bytes)
+}
+
+#[cfg(windows)]
+fn powershell_quote(value: &str) -> String {
+    format!("'{}'", value.replace('\'', "''"))
+}
+
+#[tauri::command]
+fn install_latest_update(app: tauri::AppHandle) -> Result<(), String> {
+    #[cfg(windows)]
+    {
+        use sha2::{Digest, Sha256};
+        use std::{fs, process::Command};
+
+        let release = latest_github_release()?;
+        let latest = release_version(&release)?;
+        let current = semver::Version::parse(env!("CARGO_PKG_VERSION"))
+            .map_err(|error| format!("The installed app version is invalid: {error}"))?;
+        if latest <= current {
+            return Err("Australian Bite POS is already up to date.".into());
+        }
+
+        let assets = release["assets"].as_array().ok_or("The GitHub release has no downloadable assets.")?;
+        let installer = assets.iter().find(|asset| {
+            let name = asset["name"].as_str().unwrap_or("").to_ascii_lowercase();
+            name.ends_with(".exe") && name.contains("setup")
+        }).ok_or("The GitHub release does not contain the Windows setup installer.")?;
+        let installer_name = installer["name"].as_str().ok_or("The installer asset has no filename.")?;
+        let installer_url = installer["browser_download_url"].as_str().ok_or("The installer download URL is missing.")?;
+        let checksum_name = format!("{installer_name}.sha256");
+        let checksum = assets.iter().find(|asset| asset["name"].as_str() == Some(checksum_name.as_str()))
+            .ok_or("The release is missing its installer SHA-256 checksum.")?;
+        let checksum_url = checksum["browser_download_url"].as_str().ok_or("The checksum download URL is missing.")?;
+
+        let installer_bytes = download_release_asset(installer_url)?;
+        let checksum_bytes = download_release_asset(checksum_url)?;
+        let expected = String::from_utf8(checksum_bytes)
+            .map_err(|_| "The installer checksum file is not valid text.")?
+            .split_whitespace().next().ok_or("The installer checksum is empty.")?.to_ascii_lowercase();
+        let actual = format!("{:x}", Sha256::digest(&installer_bytes));
+        if actual != expected {
+            return Err("The downloaded installer failed its SHA-256 integrity check.".into());
+        }
+
+        let installer_path = std::env::temp_dir().join(format!("australian-bite-pos-{}-setup.exe", latest));
+        fs::write(&installer_path, installer_bytes)
+            .map_err(|error| format!("Could not save the POS update: {error}"))?;
+        let app_path = std::env::current_exe()
+            .map_err(|error| format!("Could not locate the installed POS app: {error}"))?;
+        let script = format!(
+            "$ErrorActionPreference='Stop'; Start-Sleep -Seconds 2; Start-Process -FilePath {} -ArgumentList '/S' -Wait; Start-Process -FilePath {}",
+            powershell_quote(&installer_path.to_string_lossy()),
+            powershell_quote(&app_path.to_string_lossy())
+        );
+        Command::new("powershell.exe")
+            .args(["-NoProfile", "-WindowStyle", "Hidden", "-ExecutionPolicy", "Bypass", "-Command", &script])
+            .spawn()
+            .map_err(|error| format!("Could not start the POS installer: {error}"))?;
+        app.exit(0);
+        return Ok(());
+    }
+    #[cfg(not(windows))]
+    {
+        let _ = app;
+        Err("Automatic desktop updates are available in the Windows POS build.".into())
+    }
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![list_printers, print_receipt])
+        .invoke_handler(tauri::generate_handler![list_printers, print_receipt, check_for_updates, install_latest_update])
         .run(tauri::generate_context!())
         .expect("error while running Australian Bite POS");
 }

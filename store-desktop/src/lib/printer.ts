@@ -55,19 +55,27 @@ export async function printReceiptPreview(receipt: ReceiptPayload, logoUrl = "")
   }).join("");
   const html = `<!doctype html><html><head><meta charset="utf-8"><title>Receipt ${escapeHtml(receipt.order_number)}</title>
   <style>
-    @page{size:80mm auto;margin:4mm}
-    *{box-sizing:border-box}body{margin:0;background:#fff;color:#171717;font:11px/1.45 Arial,sans-serif}
-    .receipt{width:100%;max-width:72mm;margin:0 auto;padding:2mm 0}
-    .logo{display:block;width:34mm;height:auto;max-height:22mm;object-fit:contain;margin:0 auto 3mm}
-    h1{text-align:center;font-size:17px;letter-spacing:1px;margin:0 0 2mm}
-    .center{text-align:center}.muted{color:#555}.rule{border:0;border-top:1px dashed #555;margin:3mm 0}
-    .meta div{margin:1mm 0;overflow-wrap:anywhere}.item{margin:2mm 0}.item-name{font-weight:700}.item-name small{font-weight:400}
-    .item-total{display:flex;justify-content:space-between;gap:3mm}.addon{padding-left:3mm;color:#444;font-size:10px}
-    .totals div{display:flex;justify-content:space-between;margin:1mm 0}.totals .grand{font-weight:700;font-size:14px;margin-top:2mm}
-    .thanks{text-align:center;margin-top:4mm;font-weight:700}.foot{text-align:center;font-size:9px;margin-top:1mm;color:#555}
-    @media screen{body{background:#eee;padding:12px}.receipt{background:white;padding:8mm;box-shadow:0 2px 16px #0002}}
+    @page { size: A4 portrait; margin: 12mm; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #fff; color: #171717; font: 11px/1.45 Arial, sans-serif; }
+    .receipt { width: 80mm; max-width: 100%; margin: 0 auto; padding: 0; }
+    .logo { display: block; width: 34mm; height: auto; max-height: 22mm; object-fit: contain; margin: 0 auto 3mm; }
+    h1 { text-align: center; font-size: 17px; letter-spacing: 1px; margin: 0 0 2mm; }
+    .center { text-align: center; }
+    .rule { border: 0; border-top: 1px dashed #555; margin: 3mm 0; }
+    .meta div { margin: 1mm 0; overflow-wrap: anywhere; }
+    .item { margin: 2mm 0; break-inside: avoid; }
+    .item-name { font-weight: 700; }
+    .item-name small { font-weight: 400; }
+    .item-total { display: flex; justify-content: space-between; gap: 3mm; }
+    .addon { padding-left: 3mm; color: #444; font-size: 10px; }
+    .totals div { display: flex; justify-content: space-between; margin: 1mm 0; }
+    .totals .grand { font-weight: 700; font-size: 14px; margin-top: 2mm; }
+    .thanks { text-align: center; margin-top: 4mm; font-weight: 700; }
+    .foot { text-align: center; font-size: 9px; margin-top: 1mm; color: #555; }
+    @media screen { body { background: #eee; padding: 12px; } .receipt { background: #fff; padding: 8mm; box-shadow: 0 2px 16px #0002; } }
   </style></head><body><main class="receipt">
-    <img class="logo" src="${escapeHtml(logoUrl)}" alt="Australian Bite">
+    ${logoUrl ? `<img class="logo" src="${escapeHtml(logoUrl)}" alt="Australian Bite">` : ""}
     <h1>AUSTRALIAN BITE</h1><div class="center">Near NH-152, Kurukshetra Road<br>Pehowa, Haryana 136128<br>+91 74043 39777</div>
     <hr class="rule"><div class="meta">
       <div><b>ORDER:</b> ${escapeHtml(receipt.order_number)}</div><div>${escapeHtml(receipt.created_at)}</div>
@@ -84,27 +92,40 @@ export async function printReceiptPreview(receipt: ReceiptPayload, logoUrl = "")
     <div class="thanks">Thank you for ordering!</div><div class="foot">Order receipt — not a GST tax invoice</div>
   </main></body></html>`;
   const frame = document.createElement("iframe");
+  frame.setAttribute("title", "Australian Bite receipt print document");
   frame.setAttribute("aria-hidden", "true");
   frame.style.position = "fixed";
-  frame.style.right = "0";
-  frame.style.bottom = "0";
-  frame.style.width = "1px";
-  frame.style.height = "1px";
+  frame.style.left = "-10000px";
+  frame.style.top = "0";
+  frame.style.width = "900px";
+  frame.style.height = "1200px";
   frame.style.border = "0";
   frame.srcdoc = html;
   document.body.appendChild(frame);
+
   await new Promise<void>((resolve, reject) => {
     frame.onload = () => {
-      try {
-        const win = frame.contentWindow;
-        if (!win) throw new Error("Could not open the Windows print dialog.");
-        win.focus();
-        win.print();
-        frame.remove();
-        resolve();
-      } catch (error) { frame.remove(); reject(error); }
+      void (async () => {
+        try {
+          const win = frame.contentWindow;
+          const doc = frame.contentDocument;
+          if (!win || !doc) throw new Error("Could not prepare the Windows print document.");
+          await Promise.all(Array.from(doc.images).map((image) => image.decode().catch(() => undefined)));
+          if (doc.fonts?.ready) await doc.fonts.ready;
+          win.focus();
+          win.print();
+          frame.remove();
+          resolve();
+        } catch (error) {
+          frame.remove();
+          reject(error instanceof Error ? error : new Error("Could not open the Windows print dialog."));
+        }
+      })();
     };
-    frame.onerror = () => { frame.remove(); reject(new Error("Could not prepare the receipt for PDF printing.")); };
+    frame.onerror = () => {
+      frame.remove();
+      reject(new Error("Could not prepare the receipt for PDF printing."));
+    };
   });
 }
 
