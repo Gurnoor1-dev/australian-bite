@@ -1,4 +1,4 @@
-name: Build Australian Bite Store POS
+name: Australian Bite POS · Desktop and Android
 
 on:
   push:
@@ -6,66 +6,60 @@ on:
       - feature/store-desktop-pos
     tags:
       - "store-v*"
-    paths:
-      - "store-desktop/**"
-      - ".github/workflows/store-desktop-windows.yml"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: store-desktop-pos-${{ github.ref }}
+  group: australian-bite-pos-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  windows-installer:
-    name: Build Windows installer
+  validate:
+    name: Validate POS frontend
+    if: startsWith(github.ref, 'refs/heads/feature/store-desktop-pos') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Install dependencies
+        working-directory: store-desktop
+        run: npm install
+      - name: Build frontend
+        working-directory: store-desktop
+        run: npm run web
+
+  windows-release:
+    name: Build Windows EXE
+    if: startsWith(github.ref, 'refs/tags/store-v')
     runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
-
       - name: Set up Node
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 22
-
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
-
-      - name: Set release version from tag
-        if: startsWith(github.ref, 'refs/tags/store-v')
-        shell: pwsh
-        working-directory: store-desktop
-        run: |
-          $version = $env:GITHUB_REF_NAME -replace '^store-v', ''
-          if ($version -notmatch '^\d+\.\d+\.\d+([+-][0-9A-Za-z.-]+)?$') { throw "Invalid release version: $version" }
-          $configPath = "src-tauri/tauri.conf.json"
-          $config = Get-Content $configPath -Raw | ConvertFrom-Json
-          $config.version = $version
-          $config | ConvertTo-Json -Depth 100 | Set-Content $configPath -Encoding utf8
-          $cargoPath = "src-tauri/Cargo.toml"
-          $cargo = Get-Content $cargoPath -Raw
-          $cargo = [regex]::Replace($cargo, '(?m)^version = "[^"]+"', "version = `"$version`"", 1)
-          Set-Content $cargoPath $cargo -Encoding utf8
-          $packagePath = "package.json"
-          $package = Get-Content $packagePath -Raw | ConvertFrom-Json
-          $package.version = $version
-          $package | ConvertTo-Json -Depth 100 | Set-Content $packagePath -Encoding utf8
-
-      - name: Install desktop dependencies
+      - name: Set major release version
+        run: node scripts/set-pos-version.mjs "${{ github.ref_name }}"
+      - name: Install dependencies
         working-directory: store-desktop
         run: npm install
-
-      - name: Build Windows installers
+      - name: Build Windows installer
         working-directory: store-desktop
         run: npm run build
-
-      - name: Create installer checksums
-        if: startsWith(github.ref, 'refs/tags/store-v')
+      - name: Create installer checksum
         shell: pwsh
         run: |
           $installers = Get-ChildItem "store-desktop/src-tauri/target/release/bundle/nsis" -Filter "*setup.exe"
@@ -74,23 +68,106 @@ jobs:
             $hash = (Get-FileHash $installer.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
             Set-Content -NoNewline "$($installer.FullName).sha256" "$hash  $($installer.Name)"
           }
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: australian-bite-pos-windows
+          path: |
+            store-desktop/src-tauri/target/release/bundle/nsis/*setup.exe
+            store-desktop/src-tauri/target/release/bundle/nsis/*setup.exe.sha256
+          if-no-files-found: error
+          retention-days: 3
 
+  android-release:
+    name: Build signed Android APK
+    if: startsWith(github.ref, 'refs/tags/store-v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Set up Java
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Install Android NDK
+        run: |
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;27.2.12479018"
+          echo "NDK_HOME=$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_ENV"
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_ENV"
+      - name: Install Rust and Android targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+      - name: Set major release version
+        run: node scripts/set-pos-version.mjs "${{ github.ref_name }}"
+      - name: Install dependencies
+        working-directory: store-desktop
+        run: npm install
+      - name: Initialize Tauri Android project
+        working-directory: store-desktop
+        run: npx tauri android init --ci
+      - name: Configure persistent Android signing
+        env:
+          ANDROID_KEY_BASE64: ${{ secrets.ANDROID_KEY_BASE64 }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          if [ -z "$ANDROID_KEY_BASE64" ] || [ -z "$ANDROID_KEY_PASSWORD" ] || [ -z "$ANDROID_KEY_ALIAS" ]; then
+            echo "::error::Add ANDROID_KEY_BASE64, ANDROID_KEY_PASSWORD, and ANDROID_KEY_ALIAS repository secrets before publishing Android releases."
+            exit 1
+          fi
+          mkdir -p "$RUNNER_TEMP/ab-pos-signing"
+          echo "$ANDROID_KEY_BASE64" | base64 --decode > "$RUNNER_TEMP/ab-pos-signing/australian-bite-pos.jks"
+          {
+            echo "password=$ANDROID_KEY_PASSWORD"
+            echo "keyAlias=$ANDROID_KEY_ALIAS"
+            echo "storeFile=$RUNNER_TEMP/ab-pos-signing/australian-bite-pos.jks"
+          } > store-desktop/src-tauri/gen/android/keystore.properties
+      - name: Apply Android signing configuration
+        run: node scripts/configure-android-signing.mjs
+      - name: Build Android APK
+        working-directory: store-desktop
+        run: npx tauri android build --apk --ci
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: australian-bite-pos-android
+          path: store-desktop/src-tauri/gen/android/app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+          retention-days: 3
+
+  publish-major-release:
+    name: Publish major release installers
+    if: startsWith(github.ref, 'refs/tags/store-v')
+    needs:
+      - windows-release
+      - android-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Windows installer
+        uses: actions/download-artifact@v4
+        with:
+          name: australian-bite-pos-windows
+          path: release-assets
+      - name: Download Android APK
+        uses: actions/download-artifact@v4
+        with:
+          name: australian-bite-pos-android
+          path: release-assets
       - name: Publish GitHub Release
-        if: startsWith(github.ref, 'refs/tags/store-v')
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
           files: |
-            store-desktop/src-tauri/target/release/bundle/nsis/*setup.exe
-            store-desktop/src-tauri/target/release/bundle/nsis/*setup.exe.sha256
-
-      - name: Upload installer artifacts
-        if: startsWith(github.ref, 'refs/heads/feature/store-desktop-pos') || github.event_name == 'workflow_dispatch'
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
-        with:
-          name: australian-bite-store-pos-windows
-          path: |
-            store-desktop/src-tauri/target/release/bundle/msi/*.msi
-            store-desktop/src-tauri/target/release/bundle/nsis/*.exe
-          if-no-files-found: error
-          retention-days: 14
+            release-assets/**/*.exe
+            release-assets/**/*.sha256
+            release-assets/**/*.apk
