@@ -1,6 +1,6 @@
 # Australian Bite Store POS
 
-Windows desktop point-of-sale application for Australian Bite. It is a separate Tauri 2 + React app and shares the existing Australian Bite Supabase project.
+A shared Tauri 2 + React point-of-sale application for Windows desktop and Android phones/tablets. Both editions use the same Australian Bite Supabase project and POS codebase.
 
 ## Requirements
 
@@ -29,12 +29,34 @@ Sign in using an existing Australian Bite account with the `store` or `admin` ro
 - Microsoft Print to PDF and other PDF/document printers use a separate HTML print document (never RAW ESC/POS bytes). The PDF path uses a standard A4 page with the Australian Bite logo, so the resulting file is a normal, readable PDF. In the Windows print dialog choose **Microsoft Print to PDF**, then save the file.
 - The POS logo is used in the sign-in screen, sidebar, PDF receipts, and the Windows application icon.
 
-## Automatic updates
+## Windows and Android builds
 
-- The app checks GitHub Releases at startup and every four hours while running.
-- Publish a Windows POS release with a tag in the format `store-v0.1.1` (increase the semantic version for each release). The Windows release workflow builds the installer and uploads its SHA-256 checksum beside it.
-- When a newer release is found, the POS displays an **Update** action. Choosing it downloads the installer, verifies its SHA-256 checksum, silently installs it, and restarts the POS. Local app settings remain in the app's normal Windows user-data directory.
-- The update checker only accepts newer semantic versions from this repository's latest GitHub Release.
+- Windows desktop installers are built by GitHub Actions on a release tag.
+- Android APKs are built from the same POS frontend using Tauri Android. The mobile layout is touch-first and adapts the order desk, counter, kitchen, menu, and settings screens to phone and tablet sizes.
+- Branch pushes run validation only; they do not publish installer downloads.
+- Publish only major POS releases using tags such as `store-v1.0.0`, `store-v2.0.0`, etc. Each eligible major release publishes one Windows NSIS setup `.exe` and one signed Android `.apk` together.
+- The Settings screen has a manual **Check for updates** action. It only offers a newer major release. Windows verifies and installs the setup package; Android opens the signed APK download so Android's package installer can complete the update.
+- Android APKs must always use the same keystore. Store the signing material in GitHub Actions secrets; never commit the keystore or `keystore.properties`.
+
+### Required GitHub Actions secrets for Android releases
+
+- `ANDROID_KEY_BASE64`: base64-encoded persistent JKS keystore.
+- `ANDROID_KEY_PASSWORD`: keystore/key password.
+- `ANDROID_KEY_ALIAS`: key alias.
+
+Generate and back up the Android keystore once. Losing it prevents future APK updates over existing installations.
+
+## Android development
+
+- Install Android Studio, Android SDK/NDK, Java 17+, Node.js, and Rust.
+- From `store-desktop`, run `npm install`, then `npm run android:init` once.
+- Connect an Android device with USB debugging enabled and run `npm run tauri android dev`.
+- For a release APK, use `npm run android:build` after configuring the Android signing key.
+
+## Updates
+
+Only major version releases produce downloadable installers. A normal branch push does not create a new EXE or APK. Use the in-app Settings button to check for the next major release.
+
 ## Order safety
 
 - Online orders are read from the existing `orders` table and updated only through existing validated status RPCs.
