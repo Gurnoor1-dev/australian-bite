@@ -98,7 +98,7 @@ export function printReceiptDialog(receipt: ReceiptPayload): Promise<void> {
     <div class="total-row grand"><span>TOTAL</span><b>${money(receipt.total)}</b></div>
     ${receipt.notes ? `<p class="muted">Notes: ${escapeHtml(receipt.notes)}</p>` : ""}
     <div class="footer">Thank you for ordering!<br>Order receipt · Not a GST tax invoice</div>
-  </main><script>window.addEventListener("load",()=>{setTimeout(()=>window.print(),350)});window.addEventListener("afterprint",()=>window.close());</script></body></html>`;
+  </main></body></html>`;
 
   printWindow.document.open();
   printWindow.document.write(html);
@@ -106,6 +106,7 @@ export function printReceiptDialog(receipt: ReceiptPayload): Promise<void> {
   return new Promise((resolve, reject) => {
     printWindow.addEventListener("afterprint", () => resolve(), { once: true });
     printWindow.addEventListener("beforeunload", () => resolve(), { once: true });
+    window.setTimeout(() => { try { printWindow.focus(); printWindow.print(); } catch (error) { reject(error); } }, 350);
     window.setTimeout(() => {
       if (!printWindow.closed) reject(new Error("The print dialog did not finish. Check the Windows print window."));
     }, 120000);
