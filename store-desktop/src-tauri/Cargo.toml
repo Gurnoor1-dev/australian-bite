@@ -5,6 +5,10 @@ description = "Australian Bite Store POS"
 authors = ["Australian Bite"]
 edition = "2021"
 
+[lib]
+name = "australian_bite_store_pos_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
