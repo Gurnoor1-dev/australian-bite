@@ -229,7 +229,7 @@ fn check_for_updates() -> Result<Option<DesktopUpdate>, String> {
         let latest = release_version(&release)?;
         let current = semver::Version::parse(env!("CARGO_PKG_VERSION"))
             .map_err(|error| format!("The installed app version is invalid: {error}"))?;
-        if latest > current {
+        if latest.major > current.major {
             return Ok(Some(DesktopUpdate {
                 version: latest.to_string(),
                 notes: release["body"].as_str().unwrap_or("").to_string(),
@@ -268,7 +268,7 @@ fn install_latest_update(app: tauri::AppHandle) -> Result<(), String> {
         let latest = release_version(&release)?;
         let current = semver::Version::parse(env!("CARGO_PKG_VERSION"))
             .map_err(|error| format!("The installed app version is invalid: {error}"))?;
-        if latest <= current {
+        if latest.major <= current.major {
             return Err("Australian Bite POS is already up to date.".into());
         }
 
@@ -320,6 +320,7 @@ fn install_latest_update(app: tauri::AppHandle) -> Result<(), String> {
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![list_printers, print_receipt, check_for_updates, install_latest_update])
         .run(tauri::generate_context!())
         .expect("error while running Australian Bite POS");
