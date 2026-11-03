@@ -1,0 +1,90 @@
+name: Australian Bite POS · Android APK only
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Major release tag to build (for example store-v1.0.0)"
+        required: true
+        type: string
+        default: store-v1.0.0
+
+permissions:
+  contents: read
+
+concurrency:
+  group: australian-bite-pos-android-apk
+  cancel-in-progress: false
+
+jobs:
+  android-apk:
+    name: Build signed Android APK only
+    if: github.ref == 'refs/heads/feature/store-desktop-pos'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Set up Java
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - name: Install Android SDK packages
+        run: |
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;28.2.13676358"
+          echo "NDK_HOME=$ANDROID_HOME/ndk/28.2.13676358" >> "$GITHUB_ENV"
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/28.2.13676358" >> "$GITHUB_ENV"
+      - name: Install Rust and Android targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+      - name: Set release version
+        run: node scripts/set-pos-version.mjs "${{ inputs.release_tag }}"
+      - name: Install dependencies
+        working-directory: store-desktop
+        run: npm install
+      - name: Generate platform icons
+        working-directory: store-desktop
+        run: npm run icons
+      - name: Initialize Tauri Android project
+        working-directory: store-desktop
+        run: npx tauri android init --ci
+      - name: Configure persistent Android signing
+        env:
+          ANDROID_KEY_BASE64: ${{ secrets.ANDROID_KEY_BASE64 }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          if [ -z "$ANDROID_KEY_BASE64" ] || [ -z "$ANDROID_KEY_PASSWORD" ] || [ -z "$ANDROID_KEY_ALIAS" ]; then
+            echo "::error::Missing Android signing repository secrets."
+            exit 1
+          fi
+          mkdir -p "$RUNNER_TEMP/ab-pos-signing"
+          echo "$ANDROID_KEY_BASE64" | base64 --decode > "$RUNNER_TEMP/ab-pos-signing/australian-bite-pos.jks"
+          {
+            echo "password=$ANDROID_KEY_PASSWORD"
+            echo "keyAlias=$ANDROID_KEY_ALIAS"
+            echo "storeFile=$RUNNER_TEMP/ab-pos-signing/australian-bite-pos.jks"
+          } > store-desktop/src-tauri/gen/android/keystore.properties
+      - name: Apply Android signing configuration
+        run: node scripts/configure-android-signing.mjs
+      - name: Build Android APK
+        working-directory: store-desktop
+        run: npx tauri android build --apk --ci
+      - name: Upload signed APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: australian-bite-pos-android-${{ inputs.release_tag }}
+          path: store-desktop/src-tauri/gen/android/app/build/outputs/apk/**/*.apk
+          if-no-files-found: error
+          retention-days: 14
