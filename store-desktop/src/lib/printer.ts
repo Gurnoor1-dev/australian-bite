@@ -67,7 +67,7 @@ export async function printReceiptPreview(receipt: ReceiptPayload, logoUrl = "")
     .thanks{text-align:center;margin-top:4mm;font-weight:700}.foot{text-align:center;font-size:9px;margin-top:1mm;color:#555}
     @media screen{body{background:#eee;padding:12px}.receipt{background:white;padding:8mm;box-shadow:0 2px 16px #0002}}
   </style></head><body><main class="receipt">
-    <img class="logo" src="${escapeHtml(new URL("../../src/assets/australian-bite-logo.png", window.location.href).href)}" alt="Australian Bite">
+    <img class="logo" src="${escapeHtml(logoUrl)}" alt="Australian Bite">
     <h1>AUSTRALIAN BITE</h1><div class="center">Near NH-152, Kurukshetra Road<br>Pehowa, Haryana 136128<br>+91 74043 39777</div>
     <hr class="rule"><div class="meta">
       <div><b>ORDER:</b> ${escapeHtml(receipt.order_number)}</div><div>${escapeHtml(receipt.created_at)}</div>
@@ -99,10 +99,9 @@ export async function printReceiptPreview(receipt: ReceiptPayload, logoUrl = "")
         const win = frame.contentWindow;
         if (!win) throw new Error("Could not open the Windows print dialog.");
         win.focus();
-        win.addEventListener("afterprint", () => { frame.remove(); resolve(); }, { once: true });
         win.print();
-        // WebView2 can omit afterprint when the user cancels; avoid leaving a hidden frame.
-        window.setTimeout(() => { if (frame.isConnected) frame.remove(); resolve(); }, 120000);
+        frame.remove();
+        resolve();
       } catch (error) { frame.remove(); reject(error); }
     };
     frame.onerror = () => { frame.remove(); reject(new Error("Could not prepare the receipt for PDF printing.")); };
