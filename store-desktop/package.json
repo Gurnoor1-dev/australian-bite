@@ -8,14 +8,17 @@
     "web": "vite build",
     "tauri": "tauri",
     "build": "npm run icons && tauri build",
-    "icons": "tauri icon --output src-tauri/icons --fit contain ../src/assets/australian-bite-logo.png"
+    "icons": "tauri icon --output src-tauri/icons --fit contain ../src/assets/australian-bite-logo.png",
+    "android:init": "tauri android init",
+    "android:build": "tauri android build --apk"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.3",
     "@tauri-apps/api": "^2.0.0",
     "lucide-react": "^0.575.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "@tauri-apps/plugin-opener": "^2.7.2"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.0.0",
