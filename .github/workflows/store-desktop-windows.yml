@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/store-desktop-pos
+      - fix/pos-receipts-and-branding
     paths:
       - "store-desktop/**"
       - ".github/workflows/store-desktop-windows.yml"
