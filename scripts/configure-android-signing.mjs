@@ -8,21 +8,22 @@ if (!gradle.includes("import java.util.Properties")) {
 }
 
 if (!gradle.includes('create("release")')) {
-  const signing = \`
-  signingConfigs {
-    create("release") {
-      val signingPropertiesFile = rootProject.file("keystore.properties")
-      val signingProperties = Properties()
-      if (signingPropertiesFile.exists()) {
-        signingProperties.load(FileInputStream(signingPropertiesFile))
-      }
-      keyAlias = signingProperties["keyAlias"] as String
-      keyPassword = signingProperties["password"] as String
-      storeFile = file(signingProperties["storeFile"] as String)
-      storePassword = signingProperties["password"] as String
-    }
-  }
-\`;
+  const signing = [
+    "  signingConfigs {",
+    '    create("release") {',
+    '      val signingPropertiesFile = rootProject.file("keystore.properties")',
+    "      val signingProperties = Properties()",
+    "      if (signingPropertiesFile.exists()) {",
+    "        signingProperties.load(FileInputStream(signingPropertiesFile))",
+    "      }",
+    '      keyAlias = signingProperties["keyAlias"] as String',
+    '      keyPassword = signingProperties["password"] as String',
+    '      storeFile = file(signingProperties["storeFile"] as String)',
+    '      storePassword = signingProperties["password"] as String',
+    "    }",
+    "  }",
+    ""
+  ].join("\n");
   if (!/buildTypes\s*\{/.test(gradle)) throw new Error("Could not find the Android release buildTypes block.");
   gradle = gradle.replace(/buildTypes\s*\{/, signing + "\n  buildTypes {");
 }
