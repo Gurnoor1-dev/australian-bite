@@ -1,11 +1,11 @@
 import { readFileSync, writeFileSync, appendFileSync } from "node:fs";
 
 const rawTag = process.argv[2] || process.env.GITHUB_REF_NAME || "";
-const match = rawTag.match(/^store-v(\d+)\.(\d+)\.(\d+)$/);
-if (!match) throw new Error("POS releases must use semantic tags such as store-v1.0.1.");
+const match = rawTag.match(/^store-v(\\d+)\\.0\\.0$/);
+if (!match) throw new Error("Installer releases must be major tags such as store-v1.0.0 or store-v2.0.0.");
 
 const version = rawTag.replace(/^store-v/, "");
-const versionCode = Number(match[1]) * 10000 + Number(match[2]) * 100 + Number(match[3]);
+const versionCode = Number(match[1]) * 10000;
 
 const packagePath = "store-desktop/package.json";
 const packageJson = JSON.parse(readFileSync(packagePath, "utf8"));
