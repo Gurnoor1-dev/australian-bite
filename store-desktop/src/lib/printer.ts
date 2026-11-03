@@ -82,22 +82,22 @@ function printVirtualReceipt(receipt: ReceiptPayload): Promise<void> {
     </body></html>`;
   document.body.appendChild(iframe);
   return new Promise((resolve, reject) => {
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      window.setTimeout(() => iframe.remove(), 500);
+      resolve();
+    };
     iframe.onload = () => {
       try {
         const frameWindow = iframe.contentWindow;
         if (!frameWindow) throw new Error("Windows print preview could not be opened.");
-        frameWindow.onafterprint = () => {
-          window.setTimeout(() => iframe.remove(), 500);
-          resolve();
-        };
+        frameWindow.onafterprint = finish;
         frameWindow.focus();
         frameWindow.print();
-        // Some WebView builds do not emit afterprint; keep the frame available for the print dialog.
-        window.setTimeout(() => {
-          if (iframe.isConnected && !frameWindow.document.hidden) {
-            // Deliberately do not remove a still-open print document.
-          }
-        }, 30000);
+        // Chromium normally returns after the Windows dialog closes; afterprint is the fallback.
+        window.setTimeout(finish, 1000);
       } catch (error) {
         iframe.remove();
         reject(error instanceof Error ? error : new Error("Could not open the Windows print dialog."));
