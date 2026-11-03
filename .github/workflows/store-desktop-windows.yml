@@ -38,7 +38,7 @@ jobs:
 
   windows-release:
     name: Build Windows EXE
-    if: startsWith(github.ref, 'refs/tags/store-v')
+    if: startsWith(github.ref, 'refs/tags/store-v') && endsWith(github.ref, '.0.0')
     runs-on: windows-latest
     steps:
       - name: Checkout
