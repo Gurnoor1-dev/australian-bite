@@ -1,6 +1,13 @@
 name: Australian Bite POS · Android APK only
 
 on:
+  push:
+    branches:
+      - feature/store-desktop-pos
+    paths:
+      - '.github/workflows/store-android-apk.yml'
+      - 'store-desktop/**'
+      - 'scripts/**'
   workflow_dispatch:
     inputs:
       release_tag:
