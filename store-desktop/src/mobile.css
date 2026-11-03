@@ -1,0 +1,60 @@
+/* Touch-first layout shared by the Android phone and tablet build. */
+@media (max-width: 760px) {
+  html, body, #root { min-width: 0; width: 100%; overflow-x: hidden; }
+  .login-shell { grid-template-columns: 1fr; }
+  .login-story { display: none; }
+  .login-panel { min-height: 100dvh; padding: 28px 22px; }
+  .app-shell { display: block; min-height: 100dvh; }
+  .sidebar {
+    position: fixed; z-index: 30; bottom: 0; left: 0; right: 0;
+    min-height: 0; height: auto; display: block;
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  }
+  .sidebar .brand-lockup, .store-chip, .sidebar-bottom { display: none; }
+  .side-nav { padding: 0; display: flex; flex-direction: row; overflow-x: auto; gap: 4px; }
+  .nav-label { display: none; }
+  .nav-button {
+    flex: 1; min-width: 65px; height: 54px; display: flex;
+    flex-direction: column; gap: 3px; justify-content: center;
+    padding: 5px; font-size: 9px;
+  }
+  .nav-button > span svg { width: 18px; height: 18px; }
+  .nav-button small { display: none; }
+  .nav-button.active { box-shadow: inset 0 -2px #d8b78e; }
+  .workspace { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+  .topbar {
+    position: sticky; top: 0; z-index: 20; height: auto;
+    min-height: 68px; padding: 12px 14px; gap: 10px;
+  }
+  .topbar h1 { font-size: 18px; }
+  .top-actions { gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .date-pill { display: none; }
+  .status-pill { padding: 7px 9px; font-size: 9px; }
+  .page-content { padding: 18px 13px 26px; }
+  .metric-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .metric-card { padding: 12px; min-height: 78px; gap: 8px; }
+  .metric-card strong { font-size: 17px; }
+  .metric-card small, .metric-card em { font-size: 9px; }
+  .section-heading { margin: 24px 0 14px; gap: 10px; align-items: flex-start; }
+  .section-heading h2 { font-size: 21px; }
+  .section-heading .primary-button { white-space: nowrap; padding: 9px; font-size: 10px; }
+  .toolbar { flex-wrap: wrap; }
+  .search-field { max-width: none; min-width: 0; width: 100%; }
+  .toolbar select { flex: 1; min-width: 0; }
+  .order-grid { grid-template-columns: 1fr; gap: 10px; }
+  .order-card { padding: 13px; }
+  .counter-layout { display: flex; flex-direction: column; gap: 15px; }
+  .counter-menu { width: 100%; }
+  .menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .menu-tile { min-height: 108px; padding: 11px; }
+  .cart-panel { position: static; width: 100%; }
+  .cart-lines { max-height: none; }
+  .cart-fields { padding: 0 13px; }
+  .kitchen-columns { display: flex; overflow-x: auto; align-items: stretch; padding-bottom: 8px; }
+  .kitchen-column { flex: 0 0 82vw; min-height: 200px; }
+  .settings-grid { grid-template-columns: 1fr; gap: 10px; }
+  .settings-card { padding: 16px; }
+  .catalogue-row { flex-wrap: wrap; gap: 8px; padding: 12px; }
+  .catalogue-row > strong { width: auto; }
+  .toast { left: 12px; right: 12px; top: 10px; max-width: none; }
+}
