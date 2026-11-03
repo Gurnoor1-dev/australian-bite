@@ -62,7 +62,7 @@ export function printReceiptDialog(receipt: ReceiptPayload): Promise<void> {
 
   const html = `<!doctype html><html><head><meta charset="utf-8"><title>Receipt ${escapeHtml(receipt.order_number)}</title>
   <style>
-    @page { size: 80mm auto; margin: 5mm; }
+    @page { size: auto; margin: 8mm; }
     * { box-sizing: border-box; }
     body { margin: 0; color: #20251e; font: 12px/1.45 Arial, sans-serif; }
     .receipt { width: 100%; max-width: 76mm; margin: 0 auto; }
