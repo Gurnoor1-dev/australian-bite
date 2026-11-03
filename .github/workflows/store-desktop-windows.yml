@@ -51,7 +51,7 @@ jobs:
           node-version: 22
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
-      - name: Set major release version
+      - name: Set release version
         run: node scripts/set-pos-version.mjs "${{ github.ref_name }}"
       - name: Install dependencies
         working-directory: store-desktop
@@ -109,7 +109,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
-      - name: Set major release version
+      - name: Set release version
         run: node scripts/set-pos-version.mjs "${{ github.ref_name }}"
       - name: Install dependencies
         working-directory: store-desktop
