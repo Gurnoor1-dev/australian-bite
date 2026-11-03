@@ -52,9 +52,26 @@ export default function App(){
   let autoPrintResult:boolean|null=null;if(savedErr){autoPrintResult=false;}else if(autoPrint&&printMode==="thermal"&&selectedPrinter)autoPrintResult=await printOrder(saved as Order,true);
   setCart([]);setCustomerName("");setCustomerPhone("");setAddress("");setPostalCode("");setFulfillment("pickup");setPayment("cod");setView("orders");await loadOrders();if(autoPrintResult===false)flash("Counter order "+(saved?.order_number||"")+" created, but receipt printing failed. Check Printer settings.","error");else if(autoPrintResult===true)flash("Counter order "+(saved?.order_number||"")+" created and receipt sent.");else flash("Counter order "+(saved?.order_number||"")+" created");
  };
- const printOrder=async(o:Order,quiet=false):Promise<boolean>=>{if(printMode==="thermal"&&!selectedPrinter){if(!quiet)flash("Select a thermal printer in Printing settings first","error");setView("printing");return false;}if(printingLock.current)return false;printingLock.current=true;setPrintingId(o.id);const jobKey=crypto.randomUUID();const {data:job,error:jobErr}=await supabase.from("store_print_jobs").insert({order_id:o.id,requested_by:session.user.id,terminal_id:"australian-bite-store-windows",job_key:jobKey,status:"queued"}).select("id").single();if(jobErr){printingLock.current=false;setPrintingId("");if(!quiet)flash("Could not register print job: "+jobErr.message,"error");return false;}
+ const printOrder=async(o:Order,quiet=false):Promise<boolean>=>{
+  if(printMode==="thermal"&&!selectedPrinter){if(!quiet)flash("Select a thermal printer in Printing settings first","error");setView("printing");return false;}
+  if(printingLock.current)return false;
+  printingLock.current=true;setPrintingId(o.id);
   const receipt:ReceiptPayload={order_number:o.order_number,created_at:time(o.created_at),customer_name:o.contact_name,customer_phone:o.contact_phone,address:o.address,fulfillment_type:o.fulfillment_type,payment_method:o.payment_method==="cod"?"CASH ON DELIVERY":"PREPAID",payment_status:o.payment_status==="paid"?"PAID":"PENDING",items:(o.order_items||[]).map(i=>({name:i.item_name,variant:i.variant,quantity:i.quantity,unit_price:Number(i.unit_price),line_total:Number(i.line_total)+(i.order_item_addons||[]).reduce((s,a)=>s+Number(a.unit_price)*Number(a.quantity),0),addons:(i.order_item_addons||[]).map(a=>a.name+" x"+a.quantity)})),subtotal:Number(o.subtotal),discount:Number(o.discount),delivery_fee:Number(o.delivery_fee),total:Number(o.total),notes:o.notes};
-  try{if(printMode==="windows"){await printReceiptDialog(receipt);}else{await printReceipt(selectedPrinter,receipt);}await supabase.from("store_print_jobs").update({status:"printed",printed_at:new Date().toISOString(),error_message:null}).eq("id",job.id);if(!quiet)flash(printMode==="windows"?"Receipt sent to Windows print dialog":"Receipt sent to "+selectedPrinter);return true;}catch(e){const msg=e instanceof Error?e.message:"Printer error";await supabase.from("store_print_jobs").update({status:"failed",error_message:msg}).eq("id",job.id);if(!quiet)flash(msg,"error");return false;}finally{printingLock.current=false;setPrintingId("");}
+  // Open the Windows print window synchronously from the click before any network await.
+  const windowsPrint=printMode==="windows"?printReceiptDialog(receipt):null;
+  const jobKey=crypto.randomUUID();
+  const {data:job,error:jobErr}=await supabase.from("store_print_jobs").insert({order_id:o.id,requested_by:session.user.id,terminal_id:"australian-bite-store-windows",job_key:jobKey,status:"queued"}).select("id").single();
+  if(jobErr){printingLock.current=false;setPrintingId("");if(!quiet)flash("Could not register print job: "+jobErr.message,"error");return false;}
+  try{
+   if(windowsPrint)await windowsPrint;else await printReceipt(selectedPrinter,receipt);
+   await supabase.from("store_print_jobs").update({status:"printed",printed_at:new Date().toISOString(),error_message:null}).eq("id",job.id);
+   if(!quiet)flash(printMode==="windows"?"Receipt sent to Windows print dialog":"Receipt sent to "+selectedPrinter);
+   return true;
+  }catch(e){
+   const msg=e instanceof Error?e.message:"Printer error";
+   await supabase.from("store_print_jobs").update({status:"failed",error_message:msg}).eq("id",job.id);
+   if(!quiet)flash(msg,"error");return false;
+  }finally{printingLock.current=false;setPrintingId("");}
  };
  printOrderRef.current=printOrder;
  useEffect(()=>{if(!initialOrdersLoaded.current)return;const pending=orders.filter(o=>!seenOrderIds.current.has(o.id));if(!pending.length)return;void(async()=>{for(const order of pending){if(order.order_source==="counter"||!autoPrintOnline){seenOrderIds.current.add(order.id);continue;}if(printMode!=="thermal"){seenOrderIds.current.add(order.id);continue;}if(!selectedPrinter||printingLock.current)continue;seenOrderIds.current.add(order.id);await printOrderRef.current?.(order,true);}})();},[orders,autoPrintOnline,selectedPrinter,printingId,printMode]);
