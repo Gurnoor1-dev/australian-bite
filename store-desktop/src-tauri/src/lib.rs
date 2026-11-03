@@ -232,7 +232,7 @@ fn check_for_updates() -> Result<Option<DesktopUpdate>, String> {
         let latest = release_version(&release)?;
         let current = semver::Version::parse(env!("CARGO_PKG_VERSION"))
             .map_err(|error| format!("The installed app version is invalid: {error}"))?;
-        if latest.major > current.major {
+        if latest > current {
             return Ok(Some(DesktopUpdate {
                 version: latest.to_string(),
                 notes: release["body"].as_str().unwrap_or("").to_string(),
