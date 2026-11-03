@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, appendFileSync } from "node:fs";
 
 const rawTag = process.argv[2] || process.env.GITHUB_REF_NAME || "";
-const match = rawTag.match(/^store-v(\\d+)\\.0\\.0$/);
+const match = rawTag.match(/^store-v([0-9]+)[.]0[.]0$/);
 if (!match) throw new Error("Installer releases must be major tags such as store-v1.0.0 or store-v2.0.0.");
 
 const version = rawTag.replace(/^store-v/, "");
